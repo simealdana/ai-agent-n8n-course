@@ -41,18 +41,62 @@ These complementary resources are organized to support your learning journey:
         └── 📄 example_lead_scoring.md
 ```
 
-### 🎓 Main Course Curriculum (9 Modules)
+### 🎓 Complete Course Curriculum
 
-The full paid course includes:
-- **Module 0**: Course Introduction (3 lessons)
-- **Module 1**: AI Agents Mindset & Practical Foundations (4 lessons)  
-- **Module 2**: Basic N8N + Debugging Techniques (4 lessons)
-- **Module 3**: Prompting to AI Agent (2 lessons) *← Resources available here*
-- **Module 4**: Smart Inputs & External Data Connection (7 lessons)
-- **Module 5**: Scraping Agent (3 lessons)
-- **Module 6**: RAG Chatbot (3 lessons)
-- **Module 7**: Lead Generation (3 lessons)
-- **Module 8**: Extra Real-Life Agents (3 lessons)
+**AI Agent with N8N for Beginners** - Full course structure:
+
+#### **Module 0: Course Introduction**
+- Introduction to the course
+- Who is this course aimed at?
+- What is N8N and why have we chosen this tool? - Introduction to N8N
+
+#### **Module 1: AI Agents Mindset (Practical Foundations)**
+- What is an AI agent and how to think about it
+- Automation vs. Agents
+- How data flows in N8N
+- Basic agent flow patterns
+
+#### **Module 2: Basic N8N + Debugging (Pure Technique)**
+- How to setup the OpenAI credentials
+- Basic nodes: webhook, HTTP, set, if, function, AI agent node
+- Debugging in N8N (logs, errors, real troubleshooting)
+- Error handling, retries, flow validation
+- Extra: Integrating N8N with website
+
+#### **Module 3: Prompting to AI Agent** *← Resources Available Here*
+- Prompting introduction and foundations
+- Types of prompts applied to workflow
+- From prompt to AI agent transformation
+- Complete template library with examples
+
+#### **Module 4: Smart Inputs and External Data Connection**
+- Data classification + applied examples (customer support + reviews sentiment)
+- How to connect to Supabase with simple example
+- How to connect to Airtable with simple example
+- How to create Google credentials and connect to Google Sheets
+- How to use Gmail with N8N
+- Webhook authentication: protecting your external inputs
+- External API integrations & handling authentication (OAuth, API keys, tokens)
+
+#### **Module 5: Scraping Agent**
+- Introduction: why scraping matters for AI agents
+- Full scraping pipeline: extracting product data, pagination, anti-block protections
+- Integrating scraped data into agents for real-time pricing intelligence
+
+#### **Module 6: RAG Chatbot**
+- Introduction: why RAG systems unlock real memory for AI agents
+- Building your first RAG system: document ingestion, embeddings, vector DB storage
+- Building the full AI agent: question answering, context retrieval, combining vector search with OpenAI
+
+#### **Module 7: Lead Generation**
+- Introduction: how AI agents can automate lead generation and qualification
+- Building a full AI agent for lead discovery: scraping directories, collecting contacts
+- Full qualification agent: analyzing leads, scoring them, auto-populating your CRM
+
+#### **Module 8: Extra Real-Life Agents**
+- AI voice agent using ElevenLabs
+- AI voice agent using Vapi
+- Adding N8N automation to your website
 
 ### 🚀 What You'll Get from These Resources
 
@@ -62,13 +106,15 @@ The full paid course includes:
 - **Practical Examples**: Real-world implementations you can study and modify
 - **Best Practices**: Industry-standard approaches for AI agent development
 
-#### What You'll Learn in the Full Course:
-- ✅ Build N8N workflows from complete beginner to advanced
-- ✅ Create production-ready AI agents with solid conceptual foundations  
-- ✅ Master RAG systems and data integration techniques
-- ✅ Develop lead generation and web scraping automations
-- ✅ Debug and optimize N8N workflows professionally
-- ✅ Deploy agents that work reliably in real business environments
+#### What You'll Master in the Full Course:
+- ✅ **N8N Mastery**: From complete beginner to advanced workflow creation
+- ✅ **AI Agent Architecture**: Build agents with solid conceptual foundations, not just node connections
+- ✅ **RAG Systems**: Create intelligent chatbots with memory using vector databases (Pinecone, Supabase)
+- ✅ **Web Scraping**: Extract data with pagination, anti-block protections, and competitor intelligence
+- ✅ **Lead Generation**: Automated lead discovery, qualification, and CRM integration
+- ✅ **Voice Agents**: Build AI voice agents using ElevenLabs and Vapi
+- ✅ **Database Integration**: Connect to Supabase, Airtable, Google Sheets, and Gmail
+- ✅ **Production Deployment**: Debug, optimize, and deploy reliable business automations
 
 ### 💼 AI Crafter Mentorship (1:1 Guidance)
 
