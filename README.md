@@ -94,20 +94,9 @@ If you prefer to learn at your own pace or want to explore specific topics:
 
 ## Prerequisites
 - Basic understanding of n8n
-- Familiarity with JavaScript/TypeScript
+- Familiarity with JSON Files
 - Understanding of API concepts
 - Basic knowledge of AI and machine learning
-
-## Contributing
-We welcome contributions to make these resources even better:
-- Report issues or bugs
-- Suggest improvements
-- Add new examples
-- Enhance documentation
-- Share your success stories
-
-## License
-This repository is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 - n8n community for their support
@@ -116,7 +105,7 @@ This repository is licensed under the MIT License - see the LICENSE file for det
 - Contributors and reviewers
 
 ## Get the Full Course
-Ready to take your AI agent skills to the next level? [Enroll in the full course](https://your-course-url.com) to get access to:
+Ready to take your AI agent skills to the next level? [Enroll in the full course](https://simeon.cover-io.com/course-waitlist) to get access to:
 - Complete video lessons
 - Hands-on projects
 - Expert guidance
@@ -132,42 +121,20 @@ This course provides a comprehensive guide to understanding and implementing AI 
 
 ### Module 1: Foundations
 1. **Introduction to AI Agents**
-   - [What is an AI Agent?](Module_1/1-what-is-an-ai-agent/what-is-an-ai-agent.md)
-   - [Automation vs. Agents](Module_1/2-automation-vs-agents/automation-vs-agent.md)
-   - [Data Flow in n8n](Module_1/3-how-data-flows-in-n8n/data-flows-in-n8n.md)
-   - [Flow Patterns](Module_1/4-flow-pattern/n8n-flow-patterns.md)
+   - [What is an AI Agent?](Module_1/1-what-is-an-ai-agent-and-how-to-think-about-it)
+   - [Automation vs. Agents](Module_1/2-automation-vs-agents)
+   - [Data Flow in n8n](Module_1/3-how-data-flows-in-n8n)
+   - [Flow Patterns](Module_1/4-flow-pattern)
 
-2. **Common Errors and Solutions**
-   - [Common Errors in AI Agent Implementation](Module_1/5-commons-errors/commons-errors.md)
 
 ### Module 2: Implementation
-1. **Building Your First Agent**
-   - [Basic Agent Structure](Module_2/1-basic-agent-structure/basic-agent-structure.md)
-   - [Agent Configuration](Module_2/2-agent-configuration/agent-configuration.md)
-   - [Testing and Debugging](Module_2/3-testing-and-debugging/testing-and-debugging.md)
 
-2. **Advanced Concepts**
-   - [Memory Management](Module_2/4-memory-management/memory-management.md)
-   - [Tool Integration](Module_2/5-tool-integration/tool-integration.md)
-   - [Error Handling](Module_2/6-error-handling/error-handling.md)
 
-### Module 3: Best Practices
-1. **Design Patterns**
-   - [Single Agent Pattern](Module_3/1-design-patterns/single-agent-pattern.md)
-   - [Multi-Agent Pattern](Module_3/1-design-patterns/multi-agent-pattern.md)
-   - [Hybrid Pattern](Module_3/1-design-patterns/hybrid-pattern.md)
-
-2. **Prompt Engineering**
-   - [Classification Prompts](Module_3/2-type-of-prompt-applied-to-workflow/1-classification-prompt.md)
-   - [Information Extraction](Module_3/2-type-of-prompt-applied-to-workflow/2-extract-information-prompts.md)
-   - [Action Prompts](Module_3/2-type-of-prompt-applied-to-workflow/3-action-prompts.md)
-   - [Reasoning Prompts](Module_3/2-type-of-prompt-applied-to-workflow/4-reasoning-prompts.md)
-   - [Creative Prompts](Module_3/2-type-of-prompt-applied-to-workflow/5-creative-prompts.md)
-
-3. **Security and Performance**
-   - [Security Best Practices](Module_3/3-security-and-performance/security-best-practices.md)
-   - [Performance Optimization](Module_3/3-security-and-performance/performance-optimization.md)
-   - [Monitoring and Logging](Module_3/3-security-and-performance/monitoring-and-logging.md)
+### Module 3: Prompting Engineer
+1. **[Prompting Introduction](Module_3/1-prompting-introduction/)**
+2. **[Type of Prompt Applied to Workflow](Module_3/2-type-of-prompt-applied-to-workflow/)**
+3. **[Prompt to AI Agent](Module_3/3-prompt-to-ai-agent/)**
+4. **[Prompts Template](Module_3/prompts-template/)**
 
 ## Key Features
 - Comprehensive coverage of AI agent concepts
