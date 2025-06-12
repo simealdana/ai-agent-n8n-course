@@ -33,10 +33,10 @@ If you prefer to learn at your own pace or want to explore specific topics:
 
 
 ### Module 3: Prompting Engineer
-1. **[Prompting Introduction](Module_3/1-prompting-introduction/)**
-2. **[Type of Prompt Applied to Workflow](Module_3/2-type-of-prompt-applied-to-workflow/)**
-3. **[Prompt to AI Agent](Module_3/3-prompt-to-ai-agent/)**
-4. **[Prompts Template](Module_3/prompts-template/)**
+- [Prompting Introduction](Module_3/1-prompting-introduction/)
+- [Type of Prompt Applied to Workflow](Module_3/2-type-of-prompt-applied-to-workflow/)
+- [Prompt to AI Agent](Module_3/3-prompt-to-ai-agent/)
+- [Prompts Template](Module_3/prompts-template/)
 
 ## What You'll Get
 
