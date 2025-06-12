@@ -1,0 +1,1077 @@
+{
+  "name": "test_workflow_module_3",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook-path",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-260, -20],
+      "id": "webhook-id",
+      "name": "Webhook",
+      "webhookId": "webhook-path"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "assignment-id-1",
+              "name": "name",
+              "value": "={{ $json.data.name }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-2",
+              "name": "email",
+              "value": "={{ $json.data.email }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-3",
+              "name": "company_size",
+              "value": "={{ $json.data.company_size }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-4",
+              "name": "service_needed",
+              "value": "={{ $json.data.service_needed }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-5",
+              "name": "budget",
+              "value": "={{ $json.data.budget }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-6",
+              "name": "message",
+              "value": "={{ $json.data.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [440, 0],
+      "id": "set-id-1",
+      "name": "map_data"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=data: {\nname: {{ $json.name }},\nemail: {{ $json.email }},\ncompany_size:{{ $json.company_size }},\nservice_needed:{{ $json.service_needed }},\nbudget:{{ $json.budget }},\nmessage:{{ $json.message }}\n}\n"
+            },
+            {
+              "content": "## Role\n\nYou are a lead qualification agent. Your role is to analyze incoming leads based on form submissions and classify their intent to purchase, as well as their current category stage.\n\n## Context\n\nYou will receive the full lead data submitted by a user through a form. The lead contains information such as name, email, company size, service needed, budget, and a free-text message explaining their situation or goals.\n\nThe business provides consulting services to startups and growing companies, covering marketing, product development, tech consulting, and operations.\n\n## Task\n\nBased on the provided information, analyze if the lead is **hot** (ready to purchase) or not, and assign a **category** representing their current stage.\n\nYou must always return the same input object, but adding the following two new fields:\n\n- `isHot`: boolean → `true` if the lead shows clear intent and budget to purchase soon. `false` otherwise.\n- `category`: one of the following values:\n  - `ready-to-purchase` → strong intent, has budget, looking to move forward.\n  - `evaluating` → gathering information, exploring options, but no clear purchase commitment yet.\n  - `not-interested` → not a relevant lead or not in target audience.\n  - `early-stage` → still validating business idea or very preliminary research.\n\nOutput format must be returned strictly as valid JSON.\n\nExample output:\n\n```json\n{\n  \"name\": \"...\",\n  \"email\": \"...\",\n  \"company_size\": \"...\",\n  \"service_needed\": \"...\",\n  \"budget\": \"...\",\n  \"message\": \"...\",\n  \"isHot\": true,\n  \"category\": \"ready-to-purchase\"\n}\n",
+              "role": "system"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [680, 0],
+      "id": "openai-id",
+      "name": "OpenAI"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "assignment-id-7",
+              "name": "name",
+              "value": "={{ $json.message.content.name }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-8",
+              "name": "email",
+              "value": "={{ $json.message.content.email }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-9",
+              "name": "company_size",
+              "value": "={{ $json.message.content.company_size }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-10",
+              "name": "service_needed",
+              "value": "={{ $json.message.content.service_needed }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-11",
+              "name": "budget",
+              "value": "={{ $json.message.content.budget }}",
+              "type": "number"
+            },
+            {
+              "id": "assignment-id-12",
+              "name": "message",
+              "value": "={{ $json.message.content.message }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-13",
+              "name": "isHot",
+              "value": "={{ $json.message.content.isHot }}",
+              "type": "boolean"
+            },
+            {
+              "id": "assignment-id-14",
+              "name": "category",
+              "value": "={{ $json.message.content.category }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1040, 0],
+      "id": "set-id-2",
+      "name": "map_data_with_category"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.isHot }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "id": "condition-id-1"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "is_hot_path"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "condition-id-2",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "evaluating",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "evaluating_path"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [1260, 0],
+      "id": "switch-id",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "  {\n    \"email_mark_down\": \"...\",\n    \"pdf_title\": \"...\",\n    \"pdf_description\": \"...\",\n    \"pdf_cta\": \"...\",\n    \"pdf_user_name\": \"...\",\n     \"email\":\"...\"\n  }"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [20, -500],
+      "id": "trigger-id",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={\nname:{{ $json.name }},\ncategory:{{ $json.category }},\ncompany_size:{{ $json.company_size }},\nemail:{{ $json.email }},\nservice_needed:{{ $json.service_needed }},\nbudget:{{ $json.budget }},\nmessage:{{ $json.message }}\n} ",
+        "options": {
+          "systemMessage": "## IMPORTANT RULES\nAlways populate all JSON fields. You must call email_sender_tool to complete. Output only valid tool calls and nothing else.\n\n## ROLE\nYou are a full AI sales agent specialized in nurturing leads who are still evaluating their options. Your role is to build trust, educate, and differentiate the service to help the lead move closer to making a decision.\n\n## CONTEXT\nYou receive:\n- name\n- email\n- company_size (SOLO, MICRO, SMALL, MEDIUM, LARGE, ENTERPRISE)\n- service_needed (MARKETING, PRODUCT, TECH_CONSULTING, OPERATIONS)\n- budget\n- message\n- isHot (boolean)\n- category (ready-to-purchase, evaluating, early-stage, not-interested)\n\nThis lead has been categorized as evaluating. Your messaging must focus on guiding the lead without pressuring, providing clear value, differentiation, and education.\n\n## TASK\n1. Analyze lead data and define key messages that address evaluation stage concerns.\n2. Use tools to gather supporting information and enrich your arguments.\n3. Generate email and PDF content following category guidelines focused on education, trust-building, and differentiation.\n4. Prepare the JSON object for email_sender_tool:\n\n```json\n[\n  {\n    \"email_mark_down\": \"...\",\n    \"pdf_title\": \"...\",\n    \"pdf_description\": \"...\",\n    \"pdf_cta\": \"...\",\n    \"pdf_user_name\": \"...\"\n     \"email\":\"...\"\n  }\n]\n```\n\n5. Call email_sender_tool with the completed JSON to finish your task.\n\n## TOOLS\nemail_type_by_category_tool: writing guidelines for evaluating leads.\npdf_strategy_sheet_tool: guidelines to build PDF fields for evaluating category.\npdf_guide_content_tool: instructions for structuring PDF content with educational and trust-building focus.\nemail_sender_tool: submit the completed JSON here as final action."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [1640, 160],
+      "id": "agent-id-1",
+      "name": "evaluating_email_generator"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "## ROLE\n\nYou are a full AI sales agent. Your role is to analyze qualified leads, retrieve relevant information from multiple data sources, and generate fully personalized emails and PDF content for each lead. You are responsible for writing persuasive sales emails adapted to the user profile and sales stage, and generating the required data for downstream systems that will send the email and generate the PDF.\n\n## CONTEXT\n\nYou will always receive the following input data from the lead form:\n\n- name\n- email\n- company_size (enum: SOLO, MICRO, SMALL, MEDIUM, LARGE, ENTERPRISE)\n- service_needed (enum: MARKETING, PRODUCT, TECH_CONSULTING, OPERATIONS)\n- budget\n- message\n- isHot (boolean)\n- category (enum: ready-to-purchase, evaluating, early-stage, not-interested)\n\nYou must analyze this data to personalize both email and PDF content.\n\nYour final output will always be a single JSON object following the format required by the EMAIL SENDER TOOL.\n\n## TASK\n\n1. Based on the lead data, determine the communication strategy and key messages.\n2. Use the provided tools to gather extra context to enrich your writing.\n3. Write the email content following the provided writing guidelines and category rules.\n4. Generate the full JSON object for the EMAIL SENDER TOOL, filling the following fields:\n\n```json\n[\n  {\n    \"email_mark_down\": \"...\",\n    \"pdf_title\": \"...\",\n    \"pdf_description\": \"...\",\n    \"pdf_cta\": \"...\",\n    \"pdf_user_name\": \"...\"\n    \"email\":\"...\"\n  }\n]\n```\n\n## TOOLS\n- wikipedia_tool: use only if you need definitions or background context related to the requested service. Do not use if not strictly relevant.\n\n- reddit_search_tool: use to explore real discussions, pain points, or frequent concerns users have related to the service needed. Extract key insights to enrich your email argumentation.\n\n- email_type_by_category_tool: contains writing guidelines and recommended tone, value propositions, goals, and objections depending on the lead's category. Always consult before writing the email.\npdf_strategy_sheet_tool: contains guidelines on how to build the PDF fields according to the lead's category. Always consult before generating PDF content.\n\n- email_sender_tool: once you finish your task, the output must fully complete the required JSON object for this tool. This is your final output, and it will be passed to an external automation.\n\n- pdf_guide_content_tool: contains detailed instructions on how to structure and enrich the PDF content based on the lead's category, including suggested sections, messaging focus, and personalization rules.\n\n\n## IMPORTANT RULES\n\nAlways fully populate all fields of the JSON. Follow the tone and strategy indicated by the tools. Use your reasoning to adapt each message to the situation. Output only valid JSON and nothing else."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [1640, -280],
+      "id": "agent-id-2",
+      "name": "hot_lead_email_generator"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "document-id-1",
+          "mode": "list",
+          "cachedResultName": "email_type_by_category"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "sheet-id-1",
+          "mode": "list",
+          "cachedResultName": "Sheet1"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [1860, 380],
+      "id": "sheets-tool-id-1",
+      "name": "email_type_by_category1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "document-id-2",
+          "mode": "list",
+          "cachedResultName": "pdf_content_guide"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "sheet-id-2",
+          "mode": "list",
+          "cachedResultName": "Sheet1"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [2200, -60],
+      "id": "sheets-tool-id-2",
+      "name": "pdf_guide_content_tool"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "document-id-2",
+          "mode": "list",
+          "cachedResultName": "pdf_content_guide"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "sheet-id-2",
+          "mode": "list",
+          "cachedResultName": "Sheet1"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [2040, 380],
+      "id": "sheets-tool-id-3",
+      "name": "pdf_guide_content_tool1"
+    },
+    {
+      "parameters": {
+        "description": "This tools is used to create the HTML email and PDF and send it to the user",
+        "workflowId": {
+          "__rl": true,
+          "value": "workflow-id-1",
+          "mode": "list",
+          "cachedResultName": "test_workflow_module_3"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email_mark_down": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('email_mark_down', ``, 'string') }}",
+            "pdf_title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('pdf_title', ``, 'string') }}",
+            "pdf_description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('pdf_description', ``, 'string') }}",
+            "pdf_cta": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('pdf_cta', ``, 'string') }}",
+            "pdf_user_name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('pdf_user_name', ``, 'string') }}",
+            "email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('email', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "email_mark_down",
+              "displayName": "email_mark_down",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pdf_title",
+              "displayName": "pdf_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pdf_description",
+              "displayName": "pdf_description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pdf_cta",
+              "displayName": "pdf_cta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pdf_user_name",
+              "displayName": "pdf_user_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [2000, -60],
+      "id": "tool-workflow-id-1",
+      "name": "email_sender_tool1"
+    },
+    {
+      "parameters": {
+        "description": "This tools is used to create the HTML email and PDF and send it to the user",
+        "workflowId": {
+          "__rl": true,
+          "value": "workflow-id-1",
+          "mode": "list",
+          "cachedResultName": "test_workflow_module_3"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email_mark_down": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('email_mark_down', ``, 'string') }}",
+            "pdf_title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('pdf_title', ``, 'string') }}",
+            "pdf_description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('pdf_description', ``, 'string') }}",
+            "pdf_cta": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('pdf_cta', ``, 'string') }}",
+            "pdf_user_name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('pdf_user_name', ``, 'string') }}",
+            "email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('email', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "email_mark_down",
+              "displayName": "email_mark_down",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "pdf_title",
+              "displayName": "pdf_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "pdf_description",
+              "displayName": "pdf_description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "pdf_cta",
+              "displayName": "pdf_cta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "pdf_user_name",
+              "displayName": "pdf_user_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [1680, 380],
+      "id": "tool-workflow-id-2",
+      "name": "email_sender_tool"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [1640, -60],
+      "id": "openai-chat-id-1",
+      "name": "OpenAI Chat Model2"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [1500, 380],
+      "id": "openai-chat-id-2",
+      "name": "OpenAI Chat Model3"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "document-id-1",
+          "mode": "list",
+          "cachedResultName": "email_type_by_category"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "sheet-id-1",
+          "mode": "list",
+          "cachedResultName": "Sheet1"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [1820, -60],
+      "id": "sheets-tool-id-4",
+      "name": "email_type_by_category_tool1"
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ $json.email_mark_down }}",
+        "destinationKey": "html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [300, -600],
+      "id": "markdown-id",
+      "name": "Markdown"
+    },
+    {
+      "parameters": {
+        "html": "{{ $json.html }}"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [520, -600],
+      "id": "html-id",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "operation": "createFromText",
+        "content": "={{ $json.pdf_title }}\n\nHello {{ $json.pdf_user_name }},\n\n{{ $json.pdf_description }}\n\nTo move forward: {{ $json.pdf_cta }}\n\nThank you,\nThe GrowthLab Team",
+        "name": "=customer_file_custom_{{$json.email}}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "folder-id",
+          "mode": "list",
+          "cachedResultName": "ai_agent_course"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [300, -360],
+      "id": "drive-id-1",
+      "name": "create_file"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [540, -360],
+      "id": "drive-id-2",
+      "name": "Google Drive"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [1220, -500],
+      "id": "merge-id",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1000, -600],
+      "id": "wait-id",
+      "name": "Wait"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.data[0].email }}",
+        "subject": "=Hello: {{ $json.data[0].pdf_user_name }}",
+        "message": "={{ $json.data[0].html }}",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [{}]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1660, -500],
+      "id": "gmail-id",
+      "name": "Gmail"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "assignment-id-15",
+              "name": "html",
+              "value": "={{ $json.html }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-16",
+              "name": "email",
+              "value": "={{ $('Markdown').item.json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-17",
+              "name": "pdf_user_name",
+              "value": "={{ $('Markdown').item.json.pdf_user_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [740, -600],
+      "id": "set-id-3",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {
+          "includeBinaries": true
+        }
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [1440, -500],
+      "id": "aggregate-id",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "errorMessage": "Error here"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [440, -180],
+      "id": "error-id",
+      "name": "Stop and Error"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body;\n\nconst requiredFields = [\"name\", \"email\", \"company_size\", \"service_needed\", \"budget\", \"message\"];\nconst errors = [];\n\nfor (const field of requiredFields) {\n  if (!body[field] || body[field].toString().trim() === \"\") {\n    errors.push(`${field} is required`);\n  }\n}\n\nreturn [{\n  json: {\n    data: body,\n    errors: errors\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-40, -20],
+      "id": "code-id",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "condition-id-3",
+              "leftValue": "={{ $json.errors.length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [160, -20],
+      "id": "if-id",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"in_process\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.3,
+      "position": [440, 220],
+      "id": "webhook-response-id",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "email": "example@email.com",
+          "email_mark_down": "# Welcome John!\n\nThank you for showing interest in our Marketing Services. We are excited to help your business grow.\n\nIf you have any questions, feel free to reply to this email.",
+          "pdf_title": "Marketing Proposal for John",
+          "pdf_description": "This proposal outlines the key marketing strategies we will apply to grow your business, including social media campaigns, SEO optimization, and paid advertising.",
+          "pdf_cta": "Schedule your onboarding call with us to start!",
+          "pdf_user_name": "John"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "map_data": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "map_data_with_category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "map_data_with_category": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "hot_lead_email_generator",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "evaluating_email_generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "email_type_by_category1": {
+      "ai_tool": [
+        [
+          {
+            "node": "evaluating_email_generator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pdf_guide_content_tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "hot_lead_email_generator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pdf_guide_content_tool1": {
+      "ai_tool": [
+        [
+          {
+            "node": "evaluating_email_generator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "email_sender_tool1": {
+      "ai_tool": [
+        [
+          {
+            "node": "hot_lead_email_generator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "email_sender_tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "evaluating_email_generator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "hot_lead_email_generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "evaluating_email_generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "email_type_by_category_tool1": {
+      "ai_tool": [
+        [
+          {
+            "node": "hot_lead_email_generator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Markdown",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "create_file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_file": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "map_data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "workflow-version-id",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "instance-id"
+  },
+  "id": "workflow-id",
+  "tags": []
+}

@@ -38,7 +38,7 @@ These complementary resources are organized to support your learning journey:
 - [Flow Patterns](Module_1/4-flow-pattern)
 
 ### Module 2: Implementation
-- Coming soon...
+ - [Automation Example Applying](Module_2/test_workflow_module_3.json)
 
 ### Module 3: Prompting Engineer
 - [Prompting Introduction](Module_3/1-prompting-introduction)
