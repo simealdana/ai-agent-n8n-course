@@ -1,0 +1,590 @@
+{
+  "name": "agent_pattern_n8n",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [-20, 780],
+      "id": "chat-trigger-id",
+      "name": "When chat message received",
+      "webhookId": "webhook-id"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "## role\n\nYou are a **University Assistant AI Agent**.  \nYou help university students by answering their questions and assisting them in learning specific topics. You always strive to provide accurate, clear, and well-structured explanations.\n\n## context\n\nThe student provides a topic or question.  \nYou have access to external tools like Wikipedia, a preloaded task sheet (`wiki_tasks_sheet`), Reddit search, calculator, and simple memory.  \nUse external tools when necessary to retrieve or verify information.  \nAlways explain concepts in a way that a university student can understand, using clear language and examples where helpful.\n\n## task\n\nWhen a student submits a topic or question, your task is to:\n\n- Understand the topic or question.\n- Search and retrieve relevant information using the available tools.\n- Summarize and explain the answer clearly.\n- Provide additional context or related concepts if relevant.\n- If the topic exists in the `wiki_tasks_sheet`, use it to enrich your response.\n- When appropriate, include key definitions, examples, or simple explanations to make the answer more digestible.\n\n## tools\n\n- `Wikipedia`: Use to retrieve information on academic topics.\n- `wiki_tasks_sheet`: Use to access predefined university tasks and topics.\n- `Simple Memory`: Use to store or recall previous student queries and learning sessions.\n- `Calculator`: Use for any mathematical calculations required.\n- `reddit_search`: Use to search for practical discussions or community insights if the question is more open-ended or subjective.\n",
+          "maxIterations": 20
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [400, 780],
+      "id": "agent-id",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [100, 1020],
+      "id": "openai-model-id",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [280, 1020],
+      "id": "memory-id",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [440, 1020],
+      "id": "wikipedia-tool-id",
+      "name": "Wikipedia"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 40],
+      "id": "manual-trigger-id",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Lead :\n{\n{{ $json.row_number }},\n{{ $json[\"Lead Name\"] }},\n{{ $json[\"Inquiry Date\"] }},\n{{ $json.Product }},\n{{ $json.Message }}\n}"
+            },
+            {
+              "content": "# Lead Qualification Prompt\n\nYou are a lead qualification agent.  \nYou will receive information for each lead in the following format:\n\n- Lead Name: [name]\n- Inquiry Date: [date]\n- Product: [product]\n- Message: [message]\n\nYour tasks are:\n\n1. Analyze the **Message** field and assign a `Category` based on the customer's intent or stage. Use one of the following categories:\n\n- Browsing: customer is just browsing, with no clear intention.\n- Evaluating: customer is comparing several providers or analyzing options.\n- Ready to Purchase: customer expresses immediate intent to buy or move forward.\n- Not Interested: customer indicates they are happy with their current solution.\n- Requesting Info: customer is asking for more information but does not express urgency.\n- Urgent Need: customer expresses urgent need or requests immediate access.\n\n2. Determine the lead's qualification `IsHot`:\n\n- \"Hot\" if the message indicates purchase intent, decision made, or urgent need.\n- \"Cold\" if the message indicates indecision, evaluation, disinterest, or delayed decision.\n\nImportant: Only use the **Message** to determine both fields. Do not use the product to influence your decision.\n\n## Output format (JSON)\n\n```json\n{\n  \"row_number\": [row_number],\n  \"Lead Name\": \"[name]\",\n  \"Inquiry Date\": \"[date]\",\n  \"Product\": \"[product]\",\n  \"Message\": \"[message]\",\n  \"Category\": \"[Category]\",\n  \"IsHot\": \"[Hot or Cold]\"\n}\n",
+              "role": "system"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [500, -280],
+      "id": "openai-id",
+      "name": "OpenAI"
+    },
+    {
+      "parameters": {
+        "content": "## Pattern 1 - Chained Requests\n\nThis is the simplest pattern and resembles a rigid pipeline. It consists of a series of predefined AI actions, executed in a fixed order. There is no single \"agent\" deciding in real time what to do; instead, `the workflow designer` manually chains together several nodes (which can be AI nodes or traditional nodes) to perform a complex task in stages.",
+        "width": 940
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [0, -520],
+      "id": "sticky-note-id",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "document-id",
+          "mode": "list",
+          "cachedResultName": "lead-test"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "sheet-id",
+          "mode": "list",
+          "cachedResultName": "lead_test_sheet"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [280, -280],
+      "id": "sheets-id",
+      "name": "lead_sheet"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "assignment-id-1",
+              "name": "row_number",
+              "value": "={{ $json.message.content.row_number }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-2",
+              "name": "Lead Name",
+              "value": "={{ $json.message.content[\"Lead Name\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-3",
+              "name": "Inquiry Date",
+              "value": "={{ $json.message.content[\"Inquiry Date\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-4",
+              "name": "Product",
+              "value": "={{ $json.message.content.Product }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-5",
+              "name": "Message",
+              "value": "={{ $json.message.content.Message }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-6",
+              "name": "Category",
+              "value": "={{ $json.message.content.Category }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-id-7",
+              "name": "IsHot",
+              "value": "={{ $json.message.content.IsHot }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [860, -280],
+      "id": "set-id",
+      "name": "map_lead_data"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "result-document-id",
+          "mode": "list",
+          "cachedResultName": "result_leads"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "result-sheet-id",
+          "mode": "list",
+          "cachedResultName": "hot_leads"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead Name": "={{ $json[\"Lead Name\"] }}",
+            "Message": "={{ $json.Message }}",
+            "Product": "={{ $json.Product }}",
+            "Inquiry Date": "={{ $json[\"Inquiry Date\"] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Lead Name",
+              "displayName": "Lead Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Inquiry Date",
+              "displayName": "Inquiry Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product",
+              "displayName": "Product",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [1460, -380],
+      "id": "hot-leads-id",
+      "name": "hot_leads"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.IsHot }}",
+                    "rightValue": "Hot",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "condition-id-1"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "hot_lead"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "condition-id-2",
+                    "leftValue": "={{ $json.Category }}",
+                    "rightValue": "Evaluating",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "evaluating_lead"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [1080, -280],
+      "id": "switch-id",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "evaluating-document-id",
+          "mode": "list",
+          "cachedResultName": "result_leads"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "evaluating-sheet-id",
+          "mode": "list",
+          "cachedResultName": "evaluating_leads"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead Name": "={{ $json[\"Lead Name\"] }}",
+            "Inquiry Date": "={{ $json[\"Inquiry Date\"] }}",
+            "Product": "={{ $json.Product }}",
+            "Message": "={{ $json.Message }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Lead Name",
+              "displayName": "Lead Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Inquiry Date",
+              "displayName": "Inquiry Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product",
+              "displayName": "Product",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [1460, -200],
+      "id": "evaluating-leads-id",
+      "name": "evaluating_lead"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "wiki-tasks-document-id",
+          "mode": "list",
+          "cachedResultName": "wiki_tasks"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "wiki-tasks-sheet-id",
+          "mode": "list",
+          "cachedResultName": "Sheet1"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [600, 1020],
+      "id": "wiki-tasks-id",
+      "name": "wiki_tasks_sheet"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [780, 1020],
+      "id": "calculator-id",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "subreddit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subreddit', ``, 'string') }}",
+        "keyword": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Keyword', ``, 'string') }}",
+        "limit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Limit', ``, 'number') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.redditTool",
+      "typeVersion": 1,
+      "position": [940, 1020],
+      "id": "reddit-tool-id",
+      "name": "reddit_search"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "map_lead_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "lead_sheet": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "map_lead_data": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "hot_leads",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "evaluating_lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "wiki_tasks_sheet": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reddit_search": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "workflow-version-id",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "instance-id"
+  },
+  "id": "workflow-id",
+  "tags": []
+}
