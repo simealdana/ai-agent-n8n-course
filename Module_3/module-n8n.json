@@ -1,0 +1,615 @@
+{
+  "name": "module_3_prompting",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEETS_DOCUMENT_ID",
+          "mode": "list",
+          "cachedResultName": "lead-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_DOCUMENT_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "lead_test_sheet_1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_DOCUMENT_ID/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [20, 220],
+      "id": "node-google-sheets",
+      "name": "lead_sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "assignment-1",
+              "name": "row_number",
+              "value": "={{ $json.message.content.row_number }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-2",
+              "name": "Lead Name",
+              "value": "={{ $json.message.content[\"Lead Name\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-3",
+              "name": "Inquiry Date",
+              "value": "={{ $json.message.content[\"Inquiry Date\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-4",
+              "name": "Product",
+              "value": "={{ $json.message.content.Product }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-5",
+              "name": "Message",
+              "value": "={{ $json.message.content.Message }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-6",
+              "name": "Category",
+              "value": "={{ $json.message.content.Category }}",
+              "type": "string"
+            },
+            {
+              "id": "assignment-7",
+              "name": "IsHot",
+              "value": "={{ $json.message.content.IsHot }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [560, 220],
+      "id": "node-map-lead-data",
+      "name": "map_lead_data"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Lead :\n{\n{{ $json.row_number }},\n{{ $json[\"Lead Name\"] }},\n{{ $json[\"Inquiry Date\"] }},\n{{ $json.Product }},\n{{ $json.Message }}\n}"
+            },
+            {
+              "content": "## Role\nYou are a lead qualification agent.  \nYou will receive information for each lead in the following format:\n\n- Lead Name: [name]\n- Inquiry Date: [date]\n- Product: [product]\n- Message: [message]\n\n## Task\n\n1. Analyze the **Message** field and assign a `Category` based on the customer's intent or stage. Use one of the following categories:\n\n- Browsing: customer is just browsing, with no clear intention.\n- Evaluating: customer is comparing several providers or analyzing options.\n- Ready to Purchase: customer expresses immediate intent to buy or move forward.\n- Not Interested: customer indicates they are happy with their current solution.\n- Requesting Info: customer is asking for more information but does not express urgency.\n- Urgent Need: customer expresses urgent need or requests immediate access.\n\n2. Determine the lead's qualification `IsHot`:\n\n- \"Hot\" if the message indicates purchase intent, decision made, or urgent need.\n- \"Cold\" if the message indicates indecision, evaluation, disinterest, or delayed decision.\n\nImportant: Only use the **Message** to determine both fields. Do not use the product to influence your decision.\n\n## Output format (JSON)\n\n```json\n{\n  \"row_number\": [row_number],\n  \"Lead Name\": \"[name]\",\n  \"Inquiry Date\": \"[date]\",\n  \"Product\": \"[product]\",\n  \"Message\": \"[message]\",\n  \"Category\": \"[Category]\",\n  \"IsHot\": \"[Hot or Cold]\"\n}\n",
+              "role": "system"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [200, 220],
+      "id": "node-openai-classification",
+      "name": "OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{}]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-200, 220],
+      "id": "node-schedule-trigger-1",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "content": "## Classification Prompts\n### Features and Best Practices:\n- Explicitly define possible classes: The model should know in advance what categories exist and, preferably, only choose from them. Include the list of valid labels in the prompt. E.g., \"Classify the following email as Inquiry, Complaint, or Other.\" You can even add: \"If it doesn't fit any, reply with Other.\" This closes the door to responses outside the expected classification.\n\n- Ask for concise responses: Ideally, the output should be only the category name. You should be instructed to \"respond only with...\" and avoid formulations that invite prose. For example: \"Expected output: only one of the words Inquiry, Complaint, or Other.\"\n\n- Example in prompt: For added security, we can show an example: \"Example: 'Where can I download the app?' → Category: Inquiry.\" A couple of these will guide the model.\n\n- Consistent format: If categories have synonyms or can be expressed in different ways, it is useful to specify the format. For example, prefer High/Medium/Low instead of sometimes saying \"High priority.\" You can clarify: \"Answer exactly with the word... without adding anything else.\"",
+        "height": 540,
+        "width": 1200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-380, -120],
+      "id": "note-classification",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# Information Extraction Prompts\n\n## Best Practices and Characteristics\n\n### **1. Clearly Define Keys to Extract**\nThe prompt must enumerate exactly what information is being sought. Be specific about the data fields you need.\n\n**Example:**\n```\nExtract the applicant's name, ticket number, and date from the following text...\n```\n\n**Tip:** When possible, use the same terms that appear in structured text. For free-form text, describe what you're looking for: *\"...from the following support email\"*.\n\n### **2. Structured Output Format**\nIt's highly recommended to request a structured format (JSON, XML, CSV, or simple key:value in text) for the output. **JSON is usually ideal** since it can be easily parsed by a Function node later.\n\n**Example:**\n```\nRespond in JSON format with the keys: name, ticket, and date.\n```\n\n**Pro Tip:** Including a JSON structure example in the prompt increases reliability. You can include a sample case:\n\n```\nExample output: \n{\n  \"name\": \"John Doe\",\n  \"ticket\": \"12345\", \n  \"date\": \"2023-10-01\"\n}\n```\n\nThis helps the model follow that exact pattern.\n### **3. Include Context or Examples**\nIf the same information can appear in various forms, we can guide with phrases.\n\n**Example:**\n```\nThe text will contain the name and ticket number, probably formatted as 'Name: John Doe' or 'Ticket #12345'. Make sure to capture them.\n```\nThis isn't always possible (if inputs are very free-form), but any clue helps.\n### **4. Handle Missing Data**\nDecide how the model should behave if required information is not present. Should it return null, empty string, or be omitted?",
+        "height": 1280,
+        "width": 1200,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-380, 460],
+      "id": "note-extraction",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.text }}"
+            },
+            {
+              "content": "## Role\nYou are a text word extractor\n\n## Task\nBelow is the description of a support ticket. Extract the following data and return it in JSON format:\n- \"system\": The name of the application or system mentioned (if any).\n- \"issue_type\": A word or short phrase indicating the type of issue (e.g., connection, performance, error, etc.).\n- \"date\": The date mentioned related to the incident (if provided).\n\n##Rules\n- If any data is not mentioned, use null.\n\n### Expected output\nJSON:\n{\n\"system\": \"string\",\n\"issue_type\": \"string\",\n\"date\": \"string\"\n}",
+              "role": "system"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [260, 1560],
+      "id": "node-openai-extraction",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "text-assignment",
+              "name": "text",
+              "value": "User reports that the MobileX application is throwing a 504 error when attempting to sync data since Nov 5. Possible server issue.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [40, 1560],
+      "id": "node-edit-fields-1",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-160, 1560],
+      "id": "node-manual-trigger",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "content": "# Controlled Generation Prompts\n\n## Best Practices and Characteristics\n\n### **1. Style and Tone Instructions**\nIf the text must follow a specific style (formal, friendly, technical, simple, etc.), indicate this clearly.\n\n**Examples:**\n```\nRespond formally but accessibly, addressing the customer as 'you' (formal).\n```\n\n```\nAdopt an enthusiastic and informal marketing tone.\n```\n\n**Pro Tip:** Models like GPT-4 or Claude can easily mimic styles if specified clearly.\n\n### **2. Length and Format Limits**\nBe explicit about maximum length or structure requirements.\n\n**Examples:**\n```\nThe response must not exceed 3 sentences.\n```\n\n```\nWrite the response in email format with an initial greeting and signature at the end.\n```\n\n```\nUse bullet points to list the key points.\n```\n\n**Note:** Recent models usually respect moderate length indications, though they're not perfect. If it's critical not to exceed X characters, sometimes post-processing or iteration is needed.\n\n### **3. Allowed/Prohibited Content**\nIn sensitive environments, it's vital to indicate in the prompt what not to say.\n\n**Security Guidelines:**\n```\nDon't mention internal information, don't promise anything not in the source text, and don't invent data.\n```\n\n**Data Accuracy:**\n```\nLimit yourself to the information provided. If any data is missing, don't invent it and apologize for the inconvenience.\n```\n\nThis constrains creativity to only rephrase, not create facts.\n\n### **4. Templates or Examples**\nFor automatic responses, it's sometimes useful to provide a base template.",
+        "height": 1460,
+        "width": 1200,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-380, 1820],
+      "id": "note-controlled-generation",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.text }}"
+            },
+            {
+              "content": "##Role\nYou are a virtual customer support assistant at a software company.\n\n## Task\nRespond to the customer's inquiry following these instructions:\n- Tone: Professional and empathetic.\n- Format: Formal email message, with a polite opening salutation and signature.\n- Content:\n- Thank the customer for their inquiry.\n- Clearly outline the steps to reset the password in the mobile app.\n- Offer additional assistance if needed.\n- Say goodbye cordially.\n- Length: Maximum 4-5 sentences total.\n\n##Rules\n- Do not include information not mentioned in the inquiry; do not invent unconfirmed steps.\n- Always speak in English\n\n## Expected Output (possible example):\n``\nDear John,\n\nThank you for contacting us. To reset your password in the mobile app, please follow these steps: on the home screen, tap \"Forgot your password?\" and enter your email address. Then, check your email and follow the link to create a new password. If you're still having trouble or the option doesn't appear, we're here to help.\n\nBest regards,\n[ExampleCorp Support]``",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0,
+          "topP": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [180, 3140],
+      "id": "node-openai-generation",
+      "name": "OpenAI2",
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "text-assignment-2",
+              "name": "text",
+              "value": "Hello, can you tell me how to reset my password? I can't find the option in the mobile app.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-20, 3140],
+      "id": "node-edit-fields-2",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{}]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-200, 3140],
+      "id": "node-schedule-trigger-2",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "content": "# Reasoning Prompts (Analytical or Logical Tasks)\n\n## Best Practices and Characteristics\n\n### **1. Encourage \"Thinking\" Process**\nAn effective trick is to instruct the model to reason before responding. This promotes internal logic structuring before jumping to conclusions.\n\n**Examples:**\n```\nAnalyze the given information step by step and then provide your conclusion.\n```\n\n**Chain-of-Thought Triggers:**\n```\nBreak down your reasoning:\n[reasoning space]\nFinally, give your recommendation.\n```\n\n**Note:** In very advanced models (GPT-4), this might not be necessary as they tend to reason internally, but in other models it can make a significant difference in response quality.\n\n### **2. Request Explanation or Justification**\nIf transparency is the goal (where the workflow also receives the explanation), request that the response includes the reasons behind the conclusion.\n\n**For Transparent Reasoning:**\n```\nState your decision and briefly explain why.\n```\n\n**For Hidden Chain-of-Thought:**\n```\nReason internally but only show the final answer.\n```\n\nThis allows the AI to take a well-founded decision while keeping the output clean.\n\n### **3. Delimit Analysis Scope**\nIt's important in reasoning prompts to define what sources or data the deduction should be based on.\n\n**Source Limitation:**\n```\nBased solely on the policies listed below, determine if the refund proceeds or not...\n[then list policies]\n```\n\n**Uncertainty Handling:**\n```\nGive your best estimate without going beyond the given information. If there's uncertainty, briefly mention the possible causes.\n```\n\nThis prevents the model from introducing irrelevant or incorrect external knowledge.\n\n### **4. Structure the Response**\nWe can request that the output has a certain format that reflects the reasoning process.\n\n**Structured Output Example:**\n```\nFirst, list the relevant facts; then give your final conclusion on a separate line starting with 'Conclusion:'\n```\n\nThis not only guides the model but also makes it easier for n8n to extract the conclusion (for example, by searching for the line that starts with \"Conclusion:\").",
+        "height": 1740,
+        "width": 1200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-380, 3360],
+      "id": "note-reasoning",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "# Chain-of-Thought (CoT) Prompts\n\n## Characteristics and Best Practices\n\n### **1. Instruct the Model to Think Step by Step**\nA simple way is to add the phrase \"Let's think step by step:\" within the prompt.\n\n**Examples:**\n```\nIs the number 17 prime? Let's think step by step.\n```\n\n```\nAnalyze the problem step by step before giving the final answer.\n```\n\nThe model will enumerate divisions, calculations, etc., before answering, improving accuracy significantly.\n\n### **2. Clearly Separate Reflection from Final Answer**\nA common pattern is to ask the model to mark its \"thoughts\" and then its \"answer.\"\n\n**Structured CoT Format:**\n```\nFirst, show your reasoning. Then give only the short final answer on a new line, prefixed with 'Answer:'.\n```\n\n**Internal CoT (Hidden Reasoning):**\n```\nThink through this step by step internally, then provide only the final answer.\n```\n\nThis way we get both the thought chain and the result, or improve accuracy without showing reasoning.\n\n### **3. Few-Shot CoT**\nFor complex problems, we can include an example in the prompt explicitly showing how step-by-step reasoning is done.\n\n**Example Template:**\n```\nProblem: [description]\nThinking: First I check X... Then Y... Finally I conclude Z.\nAnswer: [Z]\n\nNow solve this new problem:\nProblem: [new problem]\n```\n\nCombined with few-shots, chain-of-thought has been shown to improve models' capacity for tasks requiring logic.\n\n### **4. Multi-Node Implementation in N8N**\nWhile CoT usually refers to within the same prompt, in automation we can recreate the effect in a sequence of nodes.\n\n**Chained Request Pattern:**\n```\nNode 1 (LLM): Extract and summarize relevant data\n↓\nNode 2 (LLM): Analyze the summarized data  \n↓\nNode 3 (LLM): Generate final response\n```\n\nThis approach aligns with CoT philosophy: divide the problem into manageable parts with predictable outputs.",
+        "height": 1580,
+        "width": 1200,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-380, 5200],
+      "id": "note-chain-of-thought",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{}]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-260, 4820],
+      "id": "node-schedule-trigger-3",
+      "name": "Schedule Trigger2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "job-description-assignment",
+              "name": "job_description",
+              "value": "Looking for a Python developer with experience in Django and AWS deployment. Knowledge of Docker and CI/CD is desirable.",
+              "type": "string"
+            },
+            {
+              "id": "candidate-summary-assignment",
+              "name": "candidate_summary",
+              "value": "Carlos López, 5 years of experience in backend development with Python, 3 years working with Django. Has worked with AWS (EC2, S3) and is familiar with Docker. No CI/CD experience mentioned",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-40, 4820],
+      "id": "node-edit-fields-3",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=job description:``{{ $json.job_description }}``\ncandidate summary:``{{ $json.candidate_summary }}``",
+        "options": {
+          "systemMessage": "##Role\nYou are a virtual IT recruiter. You must analyze a candidate's compatibility with an open position, **debating** whether they meet the requirements.\n\n## Task:\nRead the position requirements and the candidate profile, then:\n1. Briefly list the key requirements of the position along with whether the candidate meets them or not, with evidence from the profile.\n2. Finally, provide a single conclusion indicating whether the candidate is a good fit (Yes/Fit) or not, or if further work is needed (Maybe), **and explain why in one sentence**.\n\n## Rule\n- The Reasoning in the result is a must, always provide the reasoning description in the result\n\n## Expected output (possible format):\n\n- Python/Django: Yes meets (5 years of backend experience with Python, 3 with Django).\n- AWS: Yes meets (experience with EC2, S3 on AWS).\n- Docker: Yes meets (indicates working with Docker).\n- CI/CD: No mention of CI/CD experience.\n\nReasoning: The reasoning behind the conclusions (REQUIRED)\n\nConclusion: Suitable – The candidate meets the main requirements (Python, Django, AWS, Docker), lacking only CI/CD which is desirable, making him/her a good fit for the position."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [180, 4820],
+      "id": "node-ai-agent",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [180, 5000],
+      "id": "node-openai-chat-model",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "O3-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Tasks: {{ $json.tasks.toJsonString() }}"
+            },
+            {
+              "content": "## Role\nYou are a project planning agent integrated in an automation workflow. Your job is to analyze task dependencies, calculate scheduling timelines, and determine the critical path of a project using logic and step-by-step reasoning.\n\n## Task\n1. Read the task list, including durations and dependencies.\n2. Compute for each task:\n   - Earliest start and finish times (forward pass).\n   - Latest start and finish times (backward pass).\n   - Slack (the time a task can be delayed without affecting the project end).\n3. Determine total project duration.\n4. Identify the critical path — tasks with zero slack.\n5. Return all results in a structured JSON format.\n\n## Expected Output\nYour response must include:\n\n- A list of numbered thoughts describing your reasoning:\n  - Thought 1: explanation of the first reasoning step\n  - Thought 2: second reasoning step\n  - ...\n  - Thought N: final reasoning step\n\n- Then, a final **Conclusion** section containing only the JSON output:\n```json\n{\n  \"tasks\": [\n    {\n      \"id\": \"A\",\n      \"earlyStart\": 0,\n      \"earlyFinish\": 3,\n      \"lateStart\": 0,\n      \"lateFinish\": 3,\n      \"slack\": 0\n    }\n  ],\n  \"totalDuration\": 11,\n  \"criticalPath\": [\"A\", \"C\", \"D\", \"F\"]\n}\n## Rules\nUse Chain of Thought reasoning: show your reasoning step by step before giving the final answer.\n\n- Do not make assumptions — use only the provided input.\n- Do not use external tools or APIs.\n- If input is invalid or missing, respond with a clear explanation in JSON under a key `\"error\"`\n- Your output must be fully valid JSON.\n- Dates are abstracted as day offsets (e.g., start at day 0).\n",
+              "role": "system"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [240, 6600],
+      "id": "node-openai-cot",
+      "name": "OpenAI3",
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{}]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-200, 6600],
+      "id": "node-schedule-trigger-4",
+      "name": "Schedule Trigger3"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"tasks\": [\n    { \"id\": \"A\", \"duration\": 3, \"dependsOn\": [] },\n    { \"id\": \"B\", \"duration\": 2, \"dependsOn\": [\"A\"] },\n    { \"id\": \"C\", \"duration\": 4, \"dependsOn\": [\"A\"] },\n    { \"id\": \"D\", \"duration\": 5, \"dependsOn\": [\"B\", \"C\"] },\n    { \"id\": \"E\", \"duration\": 2, \"dependsOn\": [\"C\"] },\n    { \"id\": \"F\", \"duration\": 1, \"dependsOn\": [\"D\", \"E\"] }\n  ],\n  \"constraints\": {\n    \"maxConcurrency\": 2,\n    \"startDate\": \"2025-07-01\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [20, 6600],
+      "id": "node-edit-fields-4",
+      "name": "Edit Fields3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "lead_sheet": {
+      "main": [
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "map_lead_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "lead_sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [[]]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "OpenAI2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [[]]
+    },
+    "Schedule Trigger3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "OpenAI3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "EXAMPLE_VERSION_ID",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "EXAMPLE_INSTANCE_ID"
+  },
+  "id": "EXAMPLE_WORKFLOW_ID",
+  "tags": []
+}
