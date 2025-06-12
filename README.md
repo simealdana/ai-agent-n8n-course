@@ -41,10 +41,10 @@ These complementary resources are organized to support your learning journey:
 - Coming soon...
 
 ### Module 3: Prompting Engineer
-- [Prompting Introduction](Module_3/1-prompting-introduction/)
-- [Type of Prompt Applied to Workflow](Module_3/2-type-of-prompt-applied-to-workflow/)
-- [Prompt to AI Agent](Module_3/3-prompt-to-ai-agent/)
-- [Prompts Template](Module_3/prompts-template/)
+- [Prompting Introduction](Module_3/1-prompting-introduction)
+- [Type of Prompt Applied to Workflow](Module_3/2-type-of-prompt-applied-to-workflow)
+- [Prompt to AI Agent](Module_3/3-prompt-to-ai-agent)
+- [Prompts Template](Module_3/prompts-template)
 
 ### Module 4: Smart Inputs and External Data Connection
 - Coming soon...
