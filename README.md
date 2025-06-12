@@ -1,101 +1,4 @@
-# 🤖 AI Agent Guide Course - Complementary Resources
 
-## About This Repository
-This repository serves as a comprehensive companion to the full AI Agent Course, offering both standalone value and enhanced learning when combined with the recorded course content. Whether you're looking for quick reference, additional practice, or a structured learning path, these resources are designed to support your journey in mastering AI agents with n8n.
-
-## Course Structure
-
-### Module 1: Foundations
-- [What is an AI Agent?](Module_1/1-what-is-an-ai-agent-and-how-to-think-about-it)
-- [Automation vs. Agents](Module_1/2-automation-vs-agents)
-- [Data Flow in n8n](Module_1/3-how-data-flows-in-n8n)
-- [Flow Patterns](Module_1/4-flow-pattern)
-
-### Module 2: Implementation
-- Coming soon...
-
-### Module 3: Prompting Engineer
-- [Prompting Introduction](Module_3/1-prompting-introduction/)
-- [Type of Prompt Applied to Workflow](Module_3/2-type-of-prompt-applied-to-workflow/)
-- [Prompt to AI Agent](Module_3/3-prompt-to-ai-agent/)
-- [Prompts Template](Module_3/prompts-template/)
-
-## What You'll Get
-
-### 🎯 With the Full Course
-- Step-by-step video tutorials
-- Live coding demonstrations
-- Interactive exercises
-- Q&A sessions
-- Community support
-- Certificate of completion
-
-### 📖 With This Repository
-- Comprehensive documentation
-- Code examples and snippets
-- Best practices and patterns
-- Implementation guides
-- Reference materials
-- Quick-start guides
-
-## Prerequisites
-- Basic understanding of n8n
-- Familiarity with JSON Files
-- Understanding of API concepts
-- Basic knowledge of AI and machine learning
-
-## Get the Full Course
-Ready to take your AI agent skills to the next level? [Enroll in the full course](https://simeon.cover-io.com/course-waitlist) to get access to:
-- Complete video lessons
-- Hands-on projects
-- Expert guidance
-- Community support
-- Certificate of completion
-
-## Acknowledgments
-- n8n community for their support
-- AI and automation experts who contributed
-- Course students for their feedback
-- Contributors and reviewers
-
-# AI Agent Course
-
-## Course Overview
-This course provides a comprehensive guide to understanding and implementing AI agents using n8n. It covers fundamental concepts, practical implementations, and best practices for building intelligent automation workflows.
-
-## Key Features
-- Comprehensive coverage of AI agent concepts
-- Practical examples and code snippets
-- Best practices and design patterns
-- Security and performance considerations
-- Real-world implementation guides
-
-## Getting Started
-1. Clone this repository
-2. Navigate through the modules in order
-3. Follow the practical examples
-4. Implement your own AI agents
-
-## Prerequisites
-- Basic understanding of n8n
-- Familiarity with JavaScript/TypeScript
-- Understanding of API concepts
-- Basic knowledge of AI and machine learning
-
-## Contributing
-Feel free to contribute to this course by:
-- Reporting issues
-- Suggesting improvements
-- Adding new examples
-- Enhancing documentation
-
-## License
-This course is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-- n8n community
-- AI and automation experts
-- Contributors and reviewers
 
 # 🤖 AI Agent Guide Course - Complementary Resources
 
@@ -126,29 +29,22 @@ The **[AI Agent with N8N for Beginners](https://simeon.cover-io.com/course-waitl
 
 These complementary resources are organized to support your learning journey:
 
-```
-📁 Complementary Resources
-├── 📂 Module_1 - Foundations
-│ ├── 📂 1-what-is-an-ai-agent
-│ │ └── 📄 what-is-an-ai-agent.md
-│ ├── 📂 2-automation-vs-agents
-│ │ └── 📄 automation-vs-agent.md
-│ ├── 📂 3-how-data-flows-in-n8n
-│ │ └── 📄 data-flows-in-n8n.md
-│ ├── 📂 4-flow-pattern
-│ │ └── 📄 n8n-flow-patterns.md
-│
-└── 📂 Module_3 - Prompting to AI Agent
-├── 📂 1-prompting-introduction
-│ └── 📄 Prompting Engineer.pdf
-├── 📂 2-type-of-prompt-applied-to-workflow
-├── 📂 3-prompt-to-ai-agent
-└── 📂 prompts-template
-├── 📄 template.md (Universal AI Agent Template)
-├── 📄 example_agentic_ai.md
-├── 📄 example_email_classification.md
-└── 📄 example_lead_scoring.md
-```
+## Course Structure
+
+### Module 1: Foundations
+- [What is an AI Agent?](Module_1/1-what-is-an-ai-agent-and-how-to-think-about-it)
+- [Automation vs. Agents](Module_1/2-automation-vs-agents)
+- [Data Flow in n8n](Module_1/3-how-data-flows-in-n8n)
+- [Flow Patterns](Module_1/4-flow-pattern)
+
+### Module 2: Implementation
+- Coming soon...
+
+### Module 3: Prompting Engineer
+- [Prompting Introduction](Module_3/1-prompting-introduction/)
+- [Type of Prompt Applied to Workflow](Module_3/2-type-of-prompt-applied-to-workflow/)
+- [Prompt to AI Agent](Module_3/3-prompt-to-ai-agent/)
+- [Prompts Template](Module_3/prompts-template/)
 
 ### 🎓 Complete Course Curriculum
 
@@ -304,11 +200,7 @@ These resources are actively maintained with:
 - Enhanced documentation and guides
 - Additional supporting materials for the main course
 
-### 📝 License
 
-These complementary resources are provided for educational purposes. Templates and code examples can be used in your personal and commercial projects.
-
----
 
 ## 🎯 Ready to Master AI Agents with N8N?
 
