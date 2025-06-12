@@ -46,6 +46,21 @@ These complementary resources are organized to support your learning journey:
 - [Prompt to AI Agent](Module_3/3-prompt-to-ai-agent/)
 - [Prompts Template](Module_3/prompts-template/)
 
+### Module 4: Smart Inputs and External Data Connection
+- Coming soon...
+
+### Module 5: Scraping Agent
+- Coming soon...
+
+### Module 6: RAG Chatbot
+- Coming soon...
+
+### Module 7: Lead Generation
+- Coming soon...
+
+### Module 8: Extra Real-Life Agents
+- Coming soon...
+
 ### 🎓 Complete Course Curriculum
 
 **AI Agent with N8N for Beginners** - Full course structure:
