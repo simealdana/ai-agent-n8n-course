@@ -1,0 +1,1777 @@
+{
+  "name": "main_workflow_module_4",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{}]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-60, -140],
+      "id": "ed39fa8f-3e4d-4eb5-b240-1790c72eb7ab",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "REMOVED_DOC_ID",
+          "mode": "list",
+          "cachedResultName": "test_data_ticket_example",
+          "cachedResultUrl": "REMOVED_URL"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "REMOVED_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "tickets_sample",
+          "cachedResultUrl": "REMOVED_URL"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [160, -140],
+      "id": "d8a2b0a6-255b-4bb0-abcf-4ee418bba286",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REMOVED_CRED_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Data from Google Sheet—execution every gap of the time",
+        "height": 300,
+        "width": 780
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-160, -260],
+      "id": "e873d8a1-d2ce-401d-b398-7fd6b1ace417",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Data from external sources such as form",
+        "height": 300,
+        "width": 560,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-160, 120],
+      "id": "4e5587ef-f154-409f-b6a8-efd5002b77f7",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "a8fee162-1e4b-4fcb-9a8b-c7266a933d8a",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-80, 220],
+      "id": "8fabdbc4-f085-4bd2-b115-99cfd978f3e5",
+      "name": "Webhook",
+      "webhookId": "a8fee162-1e4b-4fcb-9a8b-c7266a933d8a"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2302f3c3-0af2-428a-8883-3ee2c246d735",
+              "name": "id",
+              "value": "={{ $json.body.id }}",
+              "type": "string"
+            },
+            {
+              "id": "4f510544-f525-4cd9-a179-0f7eb7af0336",
+              "name": "createdAt",
+              "value": "={{ $json.body.createdAt }}",
+              "type": "string"
+            },
+            {
+              "id": "1ff6c851-cb4d-4711-960a-049d5079c056",
+              "name": "customerEmail",
+              "value": "={{ $json.body.customerEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "4d2b3606-5231-433e-b6a8-1a03378c9c02",
+              "name": "subject",
+              "value": "={{ $json.body.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "c9ad2041-3a3b-4923-b386-b0043ad1d818",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "2a3b40f9-a304-4ba2-8859-18207130b3f4",
+              "name": "channel",
+              "value": "={{ $json.body.channel }}",
+              "type": "string"
+            },
+            {
+              "id": "e04b2155-8498-42e2-b96f-fa7f7be394d7",
+              "name": "language",
+              "value": "={{ $json.body.language }}",
+              "type": "string"
+            },
+            {
+              "id": "d8288087-221e-4c79-bf58-1b787fb169b4",
+              "name": "customerId",
+              "value": "={{ $json.body.customerId }}",
+              "type": "string"
+            },
+            {
+              "id": "0f8ab3e9-e08d-425a-8ae4-af5f2e598fd1",
+              "name": "metadata",
+              "value": "={{ $json.body.metadata }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [140, 220],
+      "id": "f4226749-a3c9-4d7a-bd30-9993fc488962",
+      "name": "webhook_map"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d371407a-e0a0-4a12-9c2e-2cdd68c1b496",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "f317f380-af47-44f5-8c37-83eef9dec013",
+              "name": "createdAt",
+              "value": "={{ $json.createdAt }}",
+              "type": "string"
+            },
+            {
+              "id": "01845ff8-0b12-450a-9d40-953d43ecdbf0",
+              "name": "subject",
+              "value": "={{ $json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "7e91563d-b094-49e9-9c92-ea645fae9165",
+              "name": "message",
+              "value": "={{ $json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "8f5e3a9d-2336-47b6-b95f-a86b08ee33e0",
+              "name": "channel",
+              "value": "={{ $json.channel }}",
+              "type": "string"
+            },
+            {
+              "id": "5f5afec9-934e-415e-a7d0-664535214975",
+              "name": "language",
+              "value": "={{ $json.language }}",
+              "type": "string"
+            },
+            {
+              "id": "5449480f-708c-4116-8a7a-d1e62e9d0706",
+              "name": "customerId",
+              "value": "={{ $json.customerId }}",
+              "type": "string"
+            },
+            {
+              "id": "925751f1-93ee-42da-b07a-7eda3e6adb46",
+              "name": "metadata",
+              "value": "={os:{{ $json.os }},\nbrowser:{{ $json.browser }}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [380, -140],
+      "id": "dfba3ac3-264d-41d5-b15d-e3d4c5646e07",
+      "name": "schedule_map_data"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1kPUNkcdLiQGJwrGHtbL12cRaaYrQEUyR8PM-_XlL-Sk",
+          "mode": "list",
+          "cachedResultName": "urgent_ticket",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kPUNkcdLiQGJwrGHtbL12cRaaYrQEUyR8PM-_XlL-Sk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "sheet_1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kPUNkcdLiQGJwrGHtbL12cRaaYrQEUyR8PM-_XlL-Sk/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [-100, 620],
+      "id": "6f37c0aa-5ad4-4a5c-83f1-63fda6ecf133",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "nyxQrf6o1RNSfiAG",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Data from Google Sheet: Listen for a new row added or updated",
+        "height": 300,
+        "width": 560,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-160, 520],
+      "id": "8ee12064-0c0f-4beb-95c4-739795bbcd7f",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d371407a-e0a0-4a12-9c2e-2cdd68c1b496",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "f317f380-af47-44f5-8c37-83eef9dec013",
+              "name": "createdAt",
+              "value": "={{ $json.createdAt }}",
+              "type": "string"
+            },
+            {
+              "id": "01845ff8-0b12-450a-9d40-953d43ecdbf0",
+              "name": "subject",
+              "value": "={{ $json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "7e91563d-b094-49e9-9c92-ea645fae9165",
+              "name": "message",
+              "value": "={{ $json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "8f5e3a9d-2336-47b6-b95f-a86b08ee33e0",
+              "name": "channel",
+              "value": "={{ $json.channel }}",
+              "type": "string"
+            },
+            {
+              "id": "5f5afec9-934e-415e-a7d0-664535214975",
+              "name": "language",
+              "value": "={{ $json.language }}",
+              "type": "string"
+            },
+            {
+              "id": "5449480f-708c-4116-8a7a-d1e62e9d0706",
+              "name": "customerId",
+              "value": "={{ $json.customerId }}",
+              "type": "string"
+            },
+            {
+              "id": "925751f1-93ee-42da-b07a-7eda3e6adb46",
+              "name": "metadata",
+              "value": "={os:{{ $json.os }},\nbrowser:{{ $json.browser }}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [160, 620],
+      "id": "5cd63d5f-e80d-4f82-b6cb-cf650b9c5350",
+      "name": "schedule_map_data1"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [840, 220],
+      "id": "218b2500-ddce-49c9-9ffe-77501c9c0f1d",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "data",
+              "type": "any"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [-120, 1400],
+      "id": "001fc30a-3fd7-4093-9fd0-a2cf4d7a83e4",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "REMOVED_WORKFLOW_ID",
+          "mode": "list",
+          "cachedResultName": "main_workflow_module_4"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "data",
+              "displayName": "data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [1060, 220],
+      "id": "30c22db9-a2b0-4abe-87d2-144b35f81ef4",
+      "name": "Execute Workflow"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [100, 1400],
+      "id": "1b640e42-263f-4060-9467-e82aac470f75",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Json data : {\nid:{{ $json.id }},\ncreatedAt:{{ $json.createdAt }},\nsubject:{{ $json.subject }},\nmessage:{{ $json.message }},\nchannel:{{ $json.channel }},\nlanguage:{{ $json.language }},\ncustomerId:{{ $json.customerId }},\nmetadata:{\nos:{{ $json.metadata.os }},\nbrowser:{{ $json.metadata.browser }},\n}\n} "
+            },
+            {
+              "content": "## ROLE  \nYou are a **category generator**.  \nYour job is to read a support ticket and assign it to the correct category based on its content and metadata.\n\n## TASK  \nYou will receive a ticket in JSON format. Your task is to analyze the message and all additional data provided, and determine the most appropriate category.  \nFollow these steps:\n\n1. **Read the `message`** — what issue is the customer reporting?\n2. **Check the `subject`** — does it reinforce or clarify the main problem?\n3. **Observe the `channel` and `language`** — could offer hints (e.g. tone, urgency).\n4. **Review `createdAt`** — is this a recent issue or possibly outdated?\n5. **Use the OS and browser (`metadata`)** — understand what platform is involved.\n6. **Combine all insights** to choose the most accurate category.\n\n## AVAILABLE CATEGORIES\n\n```\n'access_issue'        // Login problems, password resets, account lockouts  \n'technical_issue'     // Hardware failures, system errors, device malfunctions  \n'billing_issue'       // Refunds, overcharges, payment disputes  \n'general_question'    // General inquiries, usage questions  \n'product_feedback'    // Suggestions, complaints, or praise about the product  \n'other'               // Anything that doesn't fit the above, requires human review\n```\n\n## OUTPUT EXPECTED\n\nReturn a JSON object in the following format:\n\n```json\n{\n  \"category\": \"technical_issue\"\n}\n```\n\nOnly output the `category` field. Do not include any explanation or reasoning.\n",
+              "role": "system"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [340, 1400],
+      "id": "a3c88929-2a5c-4026-b417-3219f68f511d",
+      "name": "add_category",
+      "credentials": {
+        "openAiApi": {
+          "id": "REMOVED_API_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Json data : {\nid:{{ $json.id }},\ncreatedAt:{{ $json.createdAt }},\nsubject:{{ $json.subject }},\nmessage:{{ $json.message }},\nchannel:{{ $json.channel }},\nlanguage:{{ $json.language }},\ncustomerId:{{ $json.customerId }},\nmetadata:{\nos:{{ $json.metadata.os }},\nbrowser:{{ $json.metadata.browser }},\n}\n} "
+            },
+            {
+              "content": "## ROLE  \nYou are a **priority assigner**.  \nYour job is to read a support ticket and assign the correct priority level based on urgency and impact.\n\n## TASK  \nYou will receive a ticket in JSON format. Your task is to evaluate how urgent and impactful the issue is by analyzing the content and context of the ticket.  \nFollow these steps:\n\n1. **Read the `message`** — does the user mention not being able to use the product or service?\n2. **Check the `subject`** — does it sound urgent or critical?\n3. **Observe the `channel`** — a live chat may suggest more urgency than an email.\n4. **Check `createdAt`** — how long has the issue been open?\n5. **Look at `language` or region-specific cues** — some regions may express urgency differently.\n6. **Use the OS and browser (`metadata`)** — does the issue seem platform-specific or widespread?\n7. Use all of this to determine **how quickly the issue should be addressed**.\n\n\n## AVAILABLE PRIORITIES\n\n```\n'low'        // Non-urgent; can wait\n'medium'     // Should be resolved within the workday\n'high'       // Urgent; user experience is impacted\n'critical'   // Very urgent; service is unusable or severely broken\n```\n\n\nReturn a JSON object in the following format:\n\n```json\n{\n  \"priority\": \"high\"\n}\n```\n\nOnly output the `priority` field. Do not include any explanation or reasoning.\n",
+              "role": "system"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [940, 1400],
+      "id": "355ab8c0-7bde-4bca-95fc-a93cc0f828e7",
+      "name": "add_priority",
+      "credentials": {
+        "openAiApi": {
+          "id": "REMOVED_API_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "79d704be-a01d-42f0-9084-e5187ad6affa",
+              "name": "id",
+              "value": "={{ $('Edit Fields').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "f666bb66-bfa2-4ac4-8e58-e842fc5d8c0c",
+              "name": "createdAt",
+              "value": "={{ $('Edit Fields').item.json.createdAt }}",
+              "type": "string"
+            },
+            {
+              "id": "364f3a95-0a13-4c74-8cff-72e9e3ff72a2",
+              "name": "subject",
+              "value": "={{ $('Edit Fields').item.json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "9ca98f69-eece-488b-9369-6b26aebf55c7",
+              "name": "message",
+              "value": "={{ $('Edit Fields').item.json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "8e46479f-4c93-4fb6-ae9f-e63483b625f1",
+              "name": "channel",
+              "value": "={{ $('Edit Fields').item.json.channel }}",
+              "type": "string"
+            },
+            {
+              "id": "0edc2172-a891-4c56-93b5-c41638200545",
+              "name": "language",
+              "value": "={{ $('Edit Fields').item.json.language }}",
+              "type": "string"
+            },
+            {
+              "id": "6e832461-16c4-4080-ab29-ffe86f6445ca",
+              "name": "metadata",
+              "value": "={os:{{ $('Split Out').item.json.metadata.os }},\nbrowser:{{  $('Split Out').item.json.metadata.browser }}}",
+              "type": "object"
+            },
+            {
+              "id": "811933a6-2606-4f1c-8a82-e1c489e10020",
+              "name": "priority",
+              "value": "={{ $json.message.content.priority }}",
+              "type": "string"
+            },
+            {
+              "id": "141844c2-0292-442c-854a-4379bc336be0",
+              "name": "category",
+              "value": "={{ $('Edit Fields').item.json.category }}",
+              "type": "string"
+            },
+            {
+              "id": "5d2df562-9d75-4d72-b6eb-a80dc4fa41c2",
+              "name": "customerId",
+              "value": "={{ $('Edit Fields').item.json.customerId}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1320, 1400],
+      "id": "b1a6cd4d-1aa7-44fa-88a2-cd6e9baca1e7",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "724e6d6c-28c1-42f8-9fdf-0dff6d6b4e10",
+              "name": "id",
+              "value": "={{ $('Split Out').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "8a892d59-d595-4543-a319-3229ae53ee27",
+              "name": "createdAt",
+              "value": "={{ $('Split Out').item.json.createdAt }}",
+              "type": "string"
+            },
+            {
+              "id": "8e4bc209-71fc-4e81-a3c7-c4c5909aac40",
+              "name": "subject",
+              "value": "={{ $('Split Out').item.json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "acddf45e-562c-4553-890d-76829b5a9757",
+              "name": "message",
+              "value": "={{ $('Split Out').item.json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "54446099-1575-4fbf-99eb-d2643225266b",
+              "name": "channel",
+              "value": "={{ $('Split Out').item.json.channel }}",
+              "type": "string"
+            },
+            {
+              "id": "ffffcb05-03e9-4aef-87b4-8f5218e90bff",
+              "name": "language",
+              "value": "={{ $('Split Out').item.json.language }}",
+              "type": "string"
+            },
+            {
+              "id": "defcb2c6-cbc7-4d15-8852-b9a3e8c03881",
+              "name": "metadata",
+              "value": "={os:{{ $('Split Out').item.json.metadata.os }},\nbrowser:{{  $('Split Out').item.json.metadata.browser }}}",
+              "type": "object"
+            },
+            {
+              "id": "672a1ccd-80c0-4796-a709-cbce623c5b5a",
+              "name": "category",
+              "value": "={{ $json.message.content.category }}",
+              "type": "string"
+            },
+            {
+              "id": "6aceafa8-fb4f-4e1f-8371-fb65677e7d92",
+              "name": "customerId",
+              "value": "={{ $('Split Out').item.json.customerId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [700, 1400],
+      "id": "c362983b-2035-4197-a488-d0f1e262e5bb",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "technical_issue",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b0343230-bc3b-4184-a902-c89efe043efc"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "technical_issue"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2da0e1e1-de11-4de8-be52-31f93db235c3",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "general_question",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "general_question"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "31743a86-8841-429b-8af3-b74e5ac0ace3",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "other",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "other"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [1540, 1400],
+      "id": "2287a1e7-102e-4c71-aad1-78c768778ea7",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Json data : {\nid:{{ $json.id }},\ncreatedAt:{{ $json.createdAt }},\nsubject:{{ $json.subject }},\nmessage:{{ $json.message }},\nchannel:{{ $json.channel }},\nlanguage:{{ $json.language }},\ncustomerId:{{ $json.customerId }},\nmetadata:{\nos:{{ $json.metadata.os }},\nbrowser:{{ $json.metadata.browser }},\n}\n} ",
+        "options": {
+          "systemMessage": "## ROLE  \nYou are a General Question Resolver.\nYour role is to understand the customer's question, try to resolve it using the available tools, and escalate to a human only if you cannot confidently generate or retrieve a correct answer.\n\n## CONTEXT  \nYou will receive a support ticket containing a general question (non-technical, non-billing).  \nYour job is to reason step by step and take actions using the external tools described below.\n\n## TASK (Chain of Thought First)  \nBefore taking any action, think through the following:\n- What is the user asking? Is it clear?\n- Could this be a common question?\n- If it's not in the FAQ, would it be appropriate to generate a custom explanation?\n- Is the generated response good enough to be sent to the user?\n- Only if none of the above resolve the issue, escalate to a human.\n\nYour chain of thought must reflect:\n- The decisions made\n- The tools considered\n- Why you did or didn't use them\n- What action was finally taken\n\n## TOOLS AVAILABLE\n\n1. **`search_faq_database`**  \n   This tool searches a dataset of frequently asked questions and their responses.  \n   It loads a predefined CSV file containing questions and answers, then compares the ticket message to find a relevant match.  \n   Use this tool first when the question looks common.\n\n2. **`generate_explanation`**  \n   This tool accesses a Google Doc with instructions on how to write a proper answer.  \n   It guides you through structuring a polite, clear, and helpful response based on the question in the ticket.  \n   Use this tool when the question is not answered in the FAQ but still seems solvable.\n\n3. **`send_email_response`**  \n   This tool takes the response (from the FAQ or generated explanation) and sends it to the user's email.  \n   It uses the `ticket.customerEmail` and the final text response.  \n   Use this only if you are confident the response is complete and helpful.\n\n4. **`refer_to_human`**  \n   Use this tool **only if**:\n   - The question is too ambiguous or complex  \n   - The FAQ doesn't help and the generated explanation is not good enough  \n   - You are not confident the user will be satisfied with the automated response\n\n   When using this tool, you must provide a full structured resolution object with:\n   - The original ticket  \n   - The category and priority  \n   - The tools you used  \n   - A summary of what was attempted and why it was escalated  \n   - The final status as `\"escalated\"`\n\n   Example:\n   ```json\n   {\n     \"ticket\": {\n       \"id\": \"TICKET-0510\",\n       \"createdAt\": \"2025-06-18T14:00:00Z\",\n       \"customerEmail\": \"client@example.com\",\n       \"subject\": \"How do I cancel my subscription?\",\n       \"message\": \"Hi, I need to cancel my subscription before the next billing date.\",\n       \"channel\": \"form\",\n       \"language\": \"en\",\n       \"customerId\": \"CUST-2341\",\n       \"metadata\": {\n         \"os\": \"macOS\",\n         \"browser\": \"Safari\"\n       }\n     },\n     \"category\": \"general_question\",\n     \"priority\": \"medium\",\n     \"result\": {\n       \"status\": \"escalated\",\n       \"summary\": \"The request could not be answered confidently using the available tools.\",\n       \"actionTaken\": \"attempted_faq_and_generation\",\n       \"metadata\": {\n         \"faq_match\": false,\n         \"explanation_attempted\": true\n       },\n       \"toolsUsed\": [\n         \"search_faq_database\",\n         \"generate_explanation\"\n       ],\n       \"escalatedTo\": \"human\"\n     }\n   }\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [1960, 1400],
+      "id": "e65e8213-0721-4b84-9a45-f931e255edb4",
+      "name": "AI Agent - General Question"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [1980, 1760],
+      "id": "106d82d2-715b-4500-8239-0b74f6be1ce7",
+      "name": "AI Agent - other"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [1960, 1200],
+      "id": "17a45761-44e3-42ea-b233-55509058a190",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "REMOVED_API_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [1960, 1620],
+      "id": "ff5a384d-309c-47c9-81d9-b0280452f7cf",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "REMOVED_API_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [1980, 1960],
+      "id": "78c1a3a1-ee87-4812-b32a-ba70edbefd0f",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "REMOVED_API_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Makes an HTTP request to check the devices status, send the ticket ID",
+        "method": "POST",
+        "url": "https://jsonplaceholder.typicode.com/posts",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [{}]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "status",
+              "value": "success"
+            },
+            {
+              "name": "ticket_id",
+              "value": "={{ $('Switch').item.json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [2120, 1200],
+      "id": "32b6b85d-f467-46c9-9b53-72c1de3b3b00",
+      "name": "check_device_status"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Makes an HTTP request to check the compability",
+        "method": "POST",
+        "url": "https://jsonplaceholder.typicode.com/posts",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "compatibility",
+              "value": "unsuccessful"
+            },
+            {
+              "name": "ticketId",
+              "value": "={{ $('Switch').item.json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [2300, 1200],
+      "id": "2658fd6e-fa90-46d7-9a45-2faa6fb17b85",
+      "name": "run_compatibility_tests"
+    },
+    {
+      "parameters": {
+        "description": "Use this tool to define the next action need and reason behind the previous and next thought. "
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [2580, 1200],
+      "id": "ac402501-2289-4a79-9eb9-81d12fe2cdce",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Json data : {\nid:{{ $json.id }},\ncreatedAt:{{ $json.createdAt }},\nsubject:{{ $json.subject }},\nmessage:{{ $json.message }},\nchannel:{{ $json.channel }},\nlanguage:{{ $json.language }},\ncustomerId:{{ $json.customerId }},\nmetadata:{\nos:{{ $json.metadata.os }},\nbrowser:{{ $json.metadata.browser }},\n}\n} ",
+        "options": {
+          "systemMessage": "## ROLE  \nYou are a Technical Support Resolver.  \nYour main responsibility is to carefully analyze the problem and call the appropriate tools to resolve it or escalate when necessary.\n\n## TASK (Chain of Thought First)  \nYou will receive a ticket related to a technical issue.  \nYour job is to think step by step, identifying the problem and deciding whether to call a tool based on your reasoning.  \nThis reasoning is called a Chain of Thought, and it must:\n\n- Start by interpreting the user's message and device context.\n- Evaluate which tools are relevant before calling them.\n- Clearly explain why a tool should or should not be used.\n- End with a final decision: either the issue is resolved or needs to be escalated.\n\nEven if you don't use all tools, you must always think about whether they are needed.  \nYou must always call the tools that your reasoning justifies.\n\n## TOOLS AVAILABLE\n\n1 **`check_device_status`**  \n   Use this tool to verify if the user's device is stable or experiencing recurring issues.  \n   Pass only the `ticket.id`. This will simulate a device diagnostics request.\n\n2. **`run_compatibility_tests`**  \n   Use this tool to evaluate if there are any compatibility problems between the device's OS and browser.  \n   Provide only the `ticket.id`. This simulates a basic compatibility check.\n\n3. **`refer_to_human`**  \n   Use this tool if the issue cannot be resolved automatically or if diagnostics are inconclusive.  \n   You must prepare a full resolution object including:  \n   - The original ticket  \n   - The category and priority  \n   - The tools you used  \n   - A summary of what was attempted and why it was escalated  \n   - The final status as `\"escalated\"`  \n\n   This tool passes the case to a human support technician for manual follow-up.\n\n   Example:\n   ```json\n   {\n     \"ticket\": {\n       \"id\": \"TICKET-0420\",\n       \"createdAt\": \"2025-06-18T00:43:12.753104\",\n       \"customerEmail\": \"user42@example.com\",\n       \"subject\": \"Device keeps restarting unexpectedly\",\n       \"message\": \"Hi, my smart camera keeps rebooting every few minutes. I've tried unplugging it and resetting it but the issue persists.\",\n       \"channel\": \"form\",\n       \"language\": \"en\",\n       \"customerId\": \"CUST-0042\",\n       \"metadata\": {\n         \"os\": \"Android\",\n         \"browser\": \"Chrome\"\n       }\n     },\n     \"category\": \"technical_issue\",\n     \"priority\": \"high\",\n     \"result\": {\n       \"status\": \"escalated\",\n       \"summary\": \"The issue could not be resolved automatically. Ticket escalated to a human technician.\",\n       \"actionTaken\": \"device_check_failed\",\n       \"metadata\": {\n         \"deviceStatus\": \"unstable reboot loop\",\n         \"diagnostics\": \"failed reboot pattern detected\"\n       },\n       \"toolsUsed\": [\n         \"check_device_status\",\n         \"run_compatibility_tests\"\n       ],\n       \"escalatedTo\": \"human\"\n     }\n   }\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [1960, 980],
+      "id": "9b3f452e-0407-4b57-b95e-e7b90813ea20",
+      "name": "AI Agent - Tech issues"
+    },
+    {
+      "parameters": {
+        "description": "call this tool to refer the ticket to a human. ",
+        "workflowId": {
+          "__rl": true,
+          "value": "N5fGul3S0nCvCxOi",
+          "mode": "list",
+          "cachedResultName": "refer_to_human"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ticket": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ticket', ``, 'string') }}",
+            "category": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('category', ``, 'string') }}",
+            "priority": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('priority', ``, 'string') }}",
+            "result": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('result', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ticket",
+              "displayName": "ticket",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object",
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "result",
+              "displayName": "result",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [2460, 1200],
+      "id": "15685144-2533-4b99-b986-7d5789fcecb2",
+      "name": "refer_to_human"
+    },
+    {
+      "parameters": {
+        "description": "call this tool to refer the ticket to a human. ",
+        "workflowId": {
+          "__rl": true,
+          "value": "N5fGul3S0nCvCxOi",
+          "mode": "list",
+          "cachedResultName": "refer_to_human"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ticket": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ticket', ``, 'string') }}",
+            "category": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('category', ``, 'string') }}",
+            "priority": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('priority', ``, 'string') }}",
+            "result": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('result', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ticket",
+              "displayName": "ticket",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object",
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "result",
+              "displayName": "result",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [2440, 1600],
+      "id": "b5bd1c4d-d559-422b-894e-86673b005b32",
+      "name": "refer_to_human1"
+    },
+    {
+      "parameters": {
+        "description": "Use this tool to define the next action need and reason behind the previous and next thought. "
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [2760, 1600],
+      "id": "38511c52-341f-430d-abe6-f9321a71c3fe",
+      "name": "Think1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "REMOVED_DOC_ID",
+          "mode": "list",
+          "cachedResultName": "faq_test",
+          "cachedResultUrl": "REMOVED_URL"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "REMOVED_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "faq_dataset",
+          "cachedResultUrl": "REMOVED_URL"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [2280, 1600],
+      "id": "2bac73cc-ef52-4ace-89d4-14f7dff34a8b",
+      "name": "search_faq_database",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REMOVED_CRED_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Call this to get the explanation to create a email",
+        "jsCode": "// Example: convert the incoming query to uppercase and return it\nreturn 'When writing a response to a customer question, your main goal is to provide a clear, helpful, and polite answer that resolves the doubt as directly as possible. Start by reading the user\\'s message carefully and identifying exactly what they are asking. Your response should begin with a friendly and professional tone—avoid robotic phrasing, but also don\\'t over-explain.\n\nBegin the reply with the core of the answer. Do not waste the first lines thanking the user or repeating the question—they are looking for a solution. If the answer involves steps, list them clearly using bullets or numbers. Always be concise: a good response should ideally stay under five lines, even when multiple steps are involved.\n\nAvoid guessing. If the question is too vague, missing important information, or beyond your scope, do not attempt to complete the answer—refer the case to a human agent. Otherwise, end the message with a line that encourages trust or follow-up, such as \"Let us know if you have any trouble!\" or \"Feel free to reach out again if needed.\"\n\nKeep it clean, human, and efficient.'"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.2,
+      "position": [2120, 1620],
+      "id": "85eb71cd-3137-47df-99a3-916b6066c612",
+      "name": "generate_explanation"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [2600, 1600],
+      "id": "22f748eb-63a7-4fef-92f9-56a05162d899",
+      "name": "send_email_response",
+      "webhookId": "6f05b328-98f1-42c9-aaf7-7792100b5773",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REMOVED_CRED_ID",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "REMOVED_HOST",
+            "user-agent": "PostmanRuntime/7.44.0",
+            "content-length": "429",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br",
+            "cache-control": "no-cache",
+            "content-type": "application/json",
+            "postman-token": "REMOVED_TOKEN",
+            "x-forwarded-for": "REMOVED_IP",
+            "x-forwarded-host": "REMOVED_HOST",
+            "x-forwarded-proto": "https",
+            "x-railway-edge": "REMOVED_EDGE",
+            "x-railway-request-id": "REMOVED_REQUEST_ID",
+            "x-real-ip": "REMOVED_IP",
+            "x-request-start": "REMOVED_TIMESTAMP"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "id": "TICKET-0026",
+            "createdAt": "2025-06-12T15:00:00Z",
+            "customerEmail": "REMOVED_EMAIL",
+            "subject": "Cannot access my account",
+            "message": "I've been locked out of my account after several failed attempts. Can you help me reset my password?",
+            "channel": "form",
+            "language": "en",
+            "customerId": "REMOVED_CUSTOMER_ID",
+            "metadata": {
+              "os": "Windows",
+              "browser": "Chrome"
+            }
+          },
+          "webhookUrl": "REMOVED_WEBHOOK_URL",
+          "executionMode": "test"
+        }
+      }
+    ],
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "data": [
+            {
+              "id": "TICKET-0001",
+              "createdAt": "2025-06-09T20:52:22.044306",
+              "subject": "Each win suggest pass poor.",
+              "message": "Officer country necessary production. Finish she PM night.",
+              "channel": "email",
+              "language": "en",
+              "customerId": "CUST-4818",
+              "metadata": {
+                "os": "Linux",
+                "browser": "Chrome"
+              }
+            },
+            {
+              "id": "TICKET-0002",
+              "createdAt": "2025-05-28T20:52:22.045263",
+              "subject": "Magazine factor deal glass ready each.",
+              "message": "Personal level form process. Administration assume middle director red leader.",
+              "channel": "email",
+              "language": "es",
+              "customerId": "CUST-2055",
+              "metadata": {
+                "os": "iOS",
+                "browser": "Edge"
+              }
+            },
+            {
+              "id": "TICKET-0003",
+              "createdAt": "2025-05-24T20:52:22.045753",
+              "subject": "World evening chance including war author beat.",
+              "message": "Current fear allow learn television. Sort final central indeed. Whole what stop degree live tonight alone.",
+              "channel": "chat",
+              "language": "es",
+              "customerId": "CUST-9962",
+              "metadata": {
+                "os": "macOS",
+                "browser": "Firefox"
+              }
+            },
+            {
+              "id": "TICKET-0004",
+              "createdAt": "2025-06-07T20:52:22.046051",
+              "subject": "Age involve visit need least nor serious bring.",
+              "message": "Trade my either situation statement. Themselves according indicate eat. By factor assume moment meet ability behind.",
+              "channel": "chat",
+              "language": "en",
+              "customerId": "CUST-6305",
+              "metadata": {
+                "os": "macOS",
+                "browser": "Edge"
+              }
+            },
+            {
+              "id": "TICKET-0005",
+              "createdAt": "2025-05-26T20:52:22.046661",
+              "subject": "Manager wonder west offer garden.",
+              "message": "Smile spring stop project up leave develop. Ask check anything party foot occur room.",
+              "channel": "email",
+              "language": "en",
+              "customerId": "CUST-9974",
+              "metadata": {
+                "os": "Windows",
+                "browser": "Chrome"
+              }
+            },
+            {
+              "id": "TICKET-0006",
+              "createdAt": "2025-06-11T20:52:22.046830",
+              "subject": "Forward miss ask lot measure water half upon.",
+              "message": "Reach company call response yard remember business. Artist bag between allow once claim usually.",
+              "channel": "form",
+              "language": "en",
+              "customerId": "CUST-8316",
+              "metadata": {
+                "os": "Android",
+                "browser": "Firefox"
+              }
+            },
+            {
+              "id": "TICKET-0007",
+              "createdAt": "2025-05-23T20:52:22.047241",
+              "subject": "Determine price skill most true field why.",
+              "message": "Son much measure. Site go film final both sell. Require already she test over American read.",
+              "channel": "form",
+              "language": "es",
+              "customerId": "CUST-3776",
+              "metadata": {
+                "os": "Android",
+                "browser": "Firefox"
+              }
+            },
+            {
+              "id": "TICKET-0008",
+              "createdAt": "2025-06-17T20:52:22.047782",
+              "subject": "Last sort miss pretty visit.",
+              "message": "Their eye believe forward out deep. Mother cut thank commercial yourself somebody.",
+              "channel": "email",
+              "language": "es",
+              "customerId": "CUST-8187",
+              "metadata": {
+                "os": "Windows",
+                "browser": "Firefox"
+              }
+            },
+            {
+              "id": "TICKET-0009",
+              "createdAt": "2025-06-02T20:52:22.047996",
+              "subject": "Up project more benefit level risk.",
+              "message": "Hand they couple east million store north. Travel popular deal. Store today eat performance.",
+              "channel": "email",
+              "language": "en",
+              "customerId": "CUST-2472",
+              "metadata": {
+                "os": "Windows",
+                "browser": "Safari"
+              }
+            },
+            {
+              "id": "TICKET-0010",
+              "createdAt": "2025-05-30T20:52:22.048343",
+              "subject": "Catch television deep day movement center increase.",
+              "message": "Sea write common night material heavy knowledge product. Event four but per.",
+              "channel": "form",
+              "language": "es",
+              "customerId": "CUST-8177",
+              "metadata": {
+                "os": "Windows",
+                "browser": "Safari"
+              }
+            },
+            {
+              "id": "TICKET-0011",
+              "createdAt": "2025-05-21T20:52:22.048622",
+              "subject": "Mention bill meeting before cell respond.",
+              "message": "Ever summer write store wall. Song Congress brother choice. Detail kind feel seat return once.",
+              "channel": "form",
+              "language": "en",
+              "customerId": "CUST-6162",
+              "metadata": {
+                "os": "Linux",
+                "browser": "Chrome"
+              }
+            },
+            {
+              "id": "TICKET-0012",
+              "createdAt": "2025-05-22T20:52:22.048883",
+              "subject": "Minute person so south.",
+              "message": "Research policy pay religious American.",
+              "channel": "email",
+              "language": "en",
+              "customerId": "CUST-6994",
+              "metadata": {
+                "os": "macOS",
+                "browser": "Firefox"
+              }
+            },
+            {
+              "id": "TICKET-0013",
+              "createdAt": "2025-06-02T20:52:22.049149",
+              "subject": "These hot beautiful something late.",
+              "message": "Build tree training manager trade blood white better. Knowledge conference their end image.",
+              "channel": "chat",
+              "language": "en",
+              "customerId": "CUST-2695",
+              "metadata": {
+                "os": "Linux",
+                "browser": "Safari"
+              }
+            },
+            {
+              "id": "TICKET-0014",
+              "createdAt": "2025-06-04T20:52:22.049429",
+              "subject": "Forward exist international food.",
+              "message": "Perform month know put. On billion food city local region act. Call director true.",
+              "channel": "email",
+              "language": "es",
+              "customerId": "CUST-5915",
+              "metadata": {
+                "os": "macOS",
+                "browser": "Chrome"
+              }
+            },
+            {
+              "id": "TICKET-0015",
+              "createdAt": "2025-06-11T20:52:22.049912",
+              "subject": "Religious put director.",
+              "message": "Teacher traditional certain maintain threat eat international.",
+              "channel": "email",
+              "language": "en",
+              "customerId": "CUST-1202",
+              "metadata": {
+                "os": "macOS",
+                "browser": "Safari"
+              }
+            },
+            {
+              "id": "TICKET-0016",
+              "createdAt": "2025-06-13T20:52:22.050379",
+              "subject": "Take southern now respond modern nation rise.",
+              "message": "Every pass wind trial story. Plan foreign water school ground management. Century until five add.",
+              "channel": "chat",
+              "language": "es",
+              "customerId": "CUST-9795",
+              "metadata": {
+                "os": "macOS",
+                "browser": "Safari"
+              }
+            },
+            {
+              "id": "TICKET-0017",
+              "createdAt": "2025-05-21T20:52:22.050915",
+              "subject": "Since student so carry issue hot media.",
+              "message": "Property start physical national career.",
+              "channel": "email",
+              "language": "en",
+              "customerId": "CUST-5895",
+              "metadata": {
+                "os": "Windows",
+                "browser": "Safari"
+              }
+            },
+            {
+              "id": "TICKET-0018",
+              "createdAt": "2025-06-16T20:52:22.051156",
+              "subject": "Who try ten.",
+              "message": "Admit author medical theory part lot. Red there threat small speech. Long family chair picture party.",
+              "channel": "chat",
+              "language": "en",
+              "customerId": "CUST-6896",
+              "metadata": {
+                "os": "Android",
+                "browser": "Safari"
+              }
+            },
+            {
+              "id": "TICKET-0019",
+              "createdAt": "2025-06-08T20:52:22.051700",
+              "subject": "Policy successful situation.",
+              "message": "Run agent way scientist scene carry that. Here relationship white memory.",
+              "channel": "email",
+              "language": "en",
+              "customerId": "CUST-2023",
+              "metadata": {
+                "os": "Linux",
+                "browser": "Safari"
+              }
+            },
+            {
+              "id": "TICKET-0020",
+              "createdAt": "2025-05-29T20:52:22.052371",
+              "subject": "Record able property wide two true serious.",
+              "message": "Address green prove cost plant. Middle person hard hold what down. Unit as trip black full suddenly.",
+              "channel": "email",
+              "language": "en",
+              "customerId": "CUST-1683",
+              "metadata": {
+                "os": "macOS",
+                "browser": "Edge"
+              }
+            },
+            {
+              "id": "TICKET-0021",
+              "createdAt": "2025-06-05T20:52:22.052533",
+              "subject": "Huge form man fly agency kid.",
+              "message": "Draw anyone contain speech. Style maybe church ask score billion world. Off relationship accept none side son. Though matter technology none.",
+              "channel": "email",
+              "language": "es",
+              "customerId": "CUST-1019",
+              "metadata": {
+                "os": "macOS",
+                "browser": "Safari"
+              }
+            },
+            {
+              "id": "TICKET-0022",
+              "createdAt": "2025-05-31T20:52:22.052902",
+              "subject": "Ability purpose authority probably enjoy available.",
+              "message": "Control imagine heavy reduce career success its. Base fire truth economic appear star require participant. Western light somebody media. Itself magazine stop cost.",
+              "channel": "chat",
+              "language": "en",
+              "customerId": "CUST-6852",
+              "metadata": {
+                "os": "Linux",
+                "browser": "Chrome"
+              }
+            },
+            {
+              "id": "TICKET-0023",
+              "createdAt": "2025-05-31T20:52:22.053270",
+              "subject": "Consumer after these again free middle contain.",
+              "message": "Receive create method. Lot happen Mr itself together near near. Leave rest than lot.",
+              "channel": "form",
+              "language": "es",
+              "customerId": "CUST-5659",
+              "metadata": {
+                "os": "Android",
+                "browser": "Safari"
+              }
+            },
+            {
+              "id": "TICKET-0024",
+              "createdAt": "2025-06-13T20:52:22.053423",
+              "subject": "Thought leave surface huge try face.",
+              "message": "Page boy good soon data future. Identify occur marriage positive.",
+              "channel": "email",
+              "language": "en",
+              "customerId": "CUST-4056",
+              "metadata": {
+                "os": "iOS",
+                "browser": "Edge"
+              }
+            },
+            {
+              "id": "TICKET-0025",
+              "createdAt": "2025-06-10T20:52:22.053573",
+              "subject": "Left kind while PM.",
+              "message": "Skill ok themselves spend general. Finally generation when least later daughter choose. Player newspaper or responsibility allow rather.",
+              "channel": "email",
+              "language": "es",
+              "customerId": "CUST-6352",
+              "metadata": {
+                "os": "Android",
+                "browser": "Edge"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "webhook_map",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "schedule_map_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "schedule_map_data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "schedule_map_data": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "webhook_map": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "schedule_map_data1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "add_category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "add_category": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "add_priority": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "add_priority",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "AI Agent - Tech issues",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent - General Question",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent - other",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent - Tech issues",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent - General Question",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent - other",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_device_status": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent - Tech issues",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "run_compatibility_tests": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent - Tech issues",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent - Tech issues",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "refer_to_human": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent - Tech issues",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "refer_to_human1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent - General Question",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent - General Question",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search_faq_database": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent - General Question",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "generate_explanation": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent - General Question",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "send_email_response": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent - General Question",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "603760ba-6309-4399-8c9e-7b0a93e5267b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a8735d1bf3aac94e1ec364ebbd3f68cf6db664b7849b71a5ffb4e0161303b087"
+  },
+  "id": "d2s1nTUXoi64bG4n",
+  "tags": []
+}

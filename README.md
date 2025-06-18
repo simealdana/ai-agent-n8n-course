@@ -47,7 +47,8 @@ These complementary resources are organized to support your learning journey:
 - [Prompts Template](Module_3/prompts-template)
 
 ### Module 4: Smart Inputs and External Data Connection
-- Coming soon...
+- [Data Classification applied example](Module_4/1-data-classification-applied-examples)
+- [Example sources](Module_4/sources)
 
 ### Module 5: Scraping Agent
 - Coming soon...
@@ -90,7 +91,7 @@ These complementary resources are organized to support your learning journey:
 - Complete template library with examples
 
 #### **Module 4: Smart Inputs and External Data Connection**
-- Data classification + applied examples (customer support + reviews sentiment)
+- Data classification + applied examples (customer support)
 - How to connect to Supabase with simple example
 - How to connect to Airtable with simple example
 - How to create Google credentials and connect to Google Sheets
