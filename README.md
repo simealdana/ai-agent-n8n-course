@@ -1,16 +1,14 @@
-
-
 # 🤖 AI Agent Guide Course - Complementary Resources
 
 ## Welcome to the AI Agent with N8N Course Resources
 
-These are the **complementary resources** for the comprehensive [AI Agent with N8N for Beginners course](https://simeon.cover-io.com/course-waitlist). This repository contains templates, guides, and practical examples that support the main course curriculum.
+These are the **complementary resources** for the comprehensive [AI Agent with N8N for Beginners course](https://simeon-s-site-a58b.thinkific.com/enroll/3410007?price_id=4322550). This repository contains templates, guides, and practical examples that support the main course curriculum.
 
 **This is not the main course** - these are additional materials to enhance your learning experience with hands-on templates and examples.
 
 ### 🎯 About the Main Course
 
-The **[AI Agent with N8N for Beginners](https://simeon.cover-io.com/course-waitlist)** is a comprehensive 9-module course that takes you from zero to building production-ready AI agents using N8N. Unlike typical "drag-and-drop" tutorials, this course focuses on:
+The **[AI Agent with N8N for Beginners](https://simeon-s-site-a58b.thinkific.com/enroll/3410007?price_id=4322550)** is a comprehensive 9-module course that takes you from zero to building production-ready AI agents using N8N. Unlike typical "drag-and-drop" tutorials, this course focuses on:
 
 - **Conceptual Understanding** - Deep dive into AI agent theory and architecture
 - **Practical Application** - Build real-world agents with solid foundations
@@ -20,7 +18,7 @@ The **[AI Agent with N8N for Beginners](https://simeon.cover-io.com/course-waitl
 ### 🚀 Get the Full Course
 
 **Ready to master AI Agents with N8N?** 
-👉 **[Join the Course Waitlist](https://simeon.cover-io.com/course-waitlist)** - Complete 9-module curriculum
+👉 **[Enroll in the Complete Course](https://simeon-s-site-a58b.thinkific.com/enroll/3410007?price_id=4322550)** - Complete 9-module curriculum
 
 **Want 1:1 Personalized Guidance?**
 👉 **[Apply for AI Crafter Mentorship](https://simeon.cover-io.com/apply)** - 4-week intensive mentorship program
@@ -177,7 +175,7 @@ Each module contains:
 
 ### 🔧 How to Use These Resources
 
-1. **Enroll in the Main Course** - Get access to the [complete N8N curriculum](https://simeon.cover-io.com/course-waitlist)
+1. **Enroll in the Main Course** - Get access to the [complete N8N curriculum](https://simeon-s-site-a58b.thinkific.com/enroll/3410007?price_id=4322550)
 2. **Use Templates as Reference** - Study the provided examples during Module 3
 3. **Practice and Customize** - Modify templates to fit your specific use cases
 4. **Apply What You Learn** - Build your own agents using the frameworks provided
@@ -204,7 +202,7 @@ These **complementary resources** are:
 
 **Ready to dive deeper?**
 
-1. **[Join the Course Waitlist](https://simeon.cover-io.com/course-waitlist)** - Get the complete 9-module curriculum
+1. **[Enroll in the Complete Course](https://simeon-s-site-a58b.thinkific.com/enroll/3410007?price_id=4322550)** - Get the complete 9-module curriculum
 2. **[Apply for 1:1 Mentorship](https://simeon.cover-io.com/apply)** - Accelerate your learning with personalized guidance
 3. **Explore the Templates** - Start experimenting with the provided examples
 
@@ -216,12 +214,10 @@ These resources are actively maintained with:
 - Enhanced documentation and guides
 - Additional supporting materials for the main course
 
-
-
 ## 🎯 Ready to Master AI Agents with N8N?
 
 ### 🎓 Full Course Access
-**[Join the AI Agent with N8N Course Waitlist →](https://simeon.cover-io.com/course-waitlist)**
+**[Enroll in the AI Agent with N8N Course →](https://simeon-s-site-a58b.thinkific.com/enroll/3410007?price_id=4322550)**
 *Complete 9-module curriculum from beginner to expert*
 
 ### 🏆 1:1 Mentorship Program  
