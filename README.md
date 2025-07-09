@@ -46,6 +46,7 @@ These complementary resources are organized to support your learning journey:
 
 ### Module 4: Smart Inputs and External Data Connection
 - [Data Classification applied example](Module_4/1-data-classification-applied-examples)
+- [Webhooks](Module_4/2-webhook)
 - [Example sources](Module_4/sources)
 
 ### Module 5: Scraping Agent
