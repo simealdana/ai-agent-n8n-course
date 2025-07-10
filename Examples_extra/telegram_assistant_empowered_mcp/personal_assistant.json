@@ -1,0 +1,457 @@
+{
+  "name": "personal_assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": ["message"],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [-340, -240],
+      "id": "6946043a-27ca-40b5-8072-de293beacd18",
+      "name": "Telegram Trigger",
+      "webhookId": "REMOVED_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "REMOVED_CRED_ID",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "=##Role\nYou are a helpful assistant belongs to simeon and his personals brand\n\n##Context\nThis is the Telegram chatbot, and simeon will ask you about his resources, such as databases, calendars, Reddit posts, and comments.\n\n##Task\nComplete the questions and request made. it is not just a chatbot; it is an AI agent that make action and makes decisions based on the request provided. use the tools available to handle the requests\n\n##Tools\n- reddit_mcp: This tool allows you to create, delete, and get posts in Reddit. (ask what the tools available are.)\n- supabase_mcp: this tool allows you access to the databases belonging to the personal brands, such as interested_user, mentorship_request, and more (ask what the tools available are).\n- calendar_mcp: This tool allow to you access and make action in the Google Calendar belonging to the simeon/personal brand (ask what the tools available are).\n\n##Extra info\nToday is: {{ $now.setLocale('America/Caracas') }}\n\nUser time zone: \"America/Caracas\" "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [700, -220],
+      "id": "4d7ad935-8530-45fc-9daf-5585dc8e0bb2",
+      "name": "AI Agent",
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "maxTries": 5,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "REMOVED_MCP_ENDPOINT"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [840, 20],
+      "id": "99142fe8-06eb-41f6-b18f-566f08d33f0a",
+      "name": "reddit_mcp"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [500, 20],
+      "id": "7bc3031d-78f6-4560-a214-84f935cdd02a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "REMOVED_API_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 100
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [660, 20],
+      "id": "1faef92a-a846-4463-910e-07b6839f1de1",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1300, -240],
+      "id": "87cd409c-136b-453a-92cc-38b255707944",
+      "name": "Telegram",
+      "webhookId": "REMOVED_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "REMOVED_CRED_ID",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "REMOVED_MCP_ENDPOINT"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [1000, 20],
+      "id": "b3b667d3-93dd-4b8c-a317-cff7869238c3",
+      "name": "supabase_mcp"
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "REMOVED_MCP_ENDPOINT"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [1160, 20],
+      "id": "bf816fb8-83d9-4ad4-8e05-2a5d741674e0",
+      "name": "calendar_mcp"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text_output"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c1ddca15-1a35-4844-881d-db8bb7b31bee",
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "voice_output"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [-120, -240],
+      "id": "c6ecb65c-8b40-4534-9d93-0a2bbfe7652f",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "translate",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [260, -180],
+      "id": "d03b0773-9c2b-46cd-b8bd-c977cb6c500b",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "REMOVED_API_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [80, -180],
+      "id": "1b3a01b2-403a-40ca-9675-cdbcb1baee10",
+      "name": "Telegram1",
+      "webhookId": "REMOVED_WEBHOOK_ID",
+      "credentials": {
+        "telegramApi": {
+          "id": "REMOVED_CRED_ID",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8b1872a5-eb2d-4b50-b8cd-4c3526a55914",
+              "name": "message.text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [260, -360],
+      "id": "3bc7cf43-0409-4cac-bb64-2994073243fc",
+      "name": "map_text_message"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4272312c-042e-4b20-aee3-4c43351714d7",
+              "name": "message.text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [440, -180],
+      "id": "83578219-35b9-443e-a91d-366f36d96123",
+      "name": "map_audio_message"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "da574eb2-b656-44cf-a9be-13968dd8ed94",
+              "name": "output",
+              "value": "Error please try againt",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1060, -200],
+      "id": "881325e9-40b3-473b-aaee-844348565ce4",
+      "name": "error_message"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reddit_mcp": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "error_message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "supabase_mcp": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calendar_mcp": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "map_text_message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram1": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "map_audio_message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "map_text_message": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "map_audio_message": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "error_message": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "main": [[]]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "REMOVED_VERSION_ID",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "REMOVED_INSTANCE_ID"
+  },
+  "id": "REMOVED_WORKFLOW_ID",
+  "tags": []
+}

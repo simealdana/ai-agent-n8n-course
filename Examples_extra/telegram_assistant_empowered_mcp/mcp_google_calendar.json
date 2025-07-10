@@ -1,0 +1,1016 @@
+{
+  "name": "mcp_google_calendar",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "REMOVED_PATH_ID"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [-1700, 20],
+      "id": "d677aed7-46da-42a0-8ffe-51dfbdd50a8b",
+      "name": "MCP Server Trigger",
+      "webhookId": "REMOVED_WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "operation"
+            },
+            {
+              "name": "startDate"
+            },
+            {
+              "name": "endDate"
+            },
+            {
+              "name": "eventId"
+            },
+            {
+              "name": "timeZone"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [-720, 280],
+      "id": "7c30e3e3-3a33-48cb-ac69-553a4f743a62",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "81b134bc-d671-4493-b3ad-8df9be3f49a6",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "getEvent"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "getEvent"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "8d57914f-6587-4fb3-88e0-aa1de6ba56c1",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "deleteEvent"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "deleteEvent"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "7c38f238-213a-46ec-aefe-22e0bcb8dffc",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "createEvent"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "createEvent"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ee9b6783-a0f2-4848-9166-aba6645c1ebc",
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "updateEvent",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "updateEvent"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9ea6980d-a7be-4dec-8ddf-d2fcffb00af1",
+                    "leftValue": "getEventData",
+                    "rightValue": "getEventData",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "getEventData"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ea3a422a-3e9a-4e1b-a0be-bb35b3ac6f77",
+      "name": "Operation",
+      "type": "n8n-nodes-base.switch",
+      "position": [-320, 240],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "name": "validate_busy_time",
+        "description": "Call this tool to validate if the gap of time is already busy. it is useful to validate before creating a new event",
+        "workflowId": {
+          "__rl": true,
+          "value": "REMOVED_WORKFLOW_ID",
+          "mode": "list",
+          "cachedResultName": "MCP_google_calendar"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "operation": "=getEvent",
+            "startDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startDate', ``, 'string') }}",
+            "endDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endDate', ``, 'string') }}",
+            "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+            "timeZone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timeZone', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "operation",
+              "displayName": "operation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "startDate",
+              "displayName": "startDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "endDate",
+              "displayName": "endDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "eventId",
+              "displayName": "eventId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "timeZone",
+              "displayName": "timeZone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [-1860, 300],
+      "id": "4bfa81bf-96c0-4a64-b126-6c95a14c6727",
+      "name": "validate_busy_time"
+    },
+    {
+      "parameters": {
+        "name": "create_new_event",
+        "description": "Use this tool to create a new event; always validate if the gap of time is available before creating a new event ",
+        "workflowId": {
+          "__rl": true,
+          "value": "REMOVED_WORKFLOW_ID",
+          "mode": "list",
+          "cachedResultName": "MCP_google_calendar"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "operation": "createEvent",
+            "startDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startDate', ``, 'string') }}",
+            "endDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endDate', ``, 'string') }}",
+            "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+            "timeZone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timeZone', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "operation",
+              "displayName": "operation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "startDate",
+              "displayName": "startDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "endDate",
+              "displayName": "endDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "eventId",
+              "displayName": "eventId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "timeZone",
+              "displayName": "timeZone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [-1700, 300],
+      "id": "9346de99-9388-440f-8956-d65c2ebf6e8c",
+      "name": "create_new_event"
+    },
+    {
+      "parameters": {
+        "name": "delete_event",
+        "description": "Call this tool to delete a event, to delete a event you need the even id. it is required",
+        "workflowId": {
+          "__rl": true,
+          "value": "REMOVED_WORKFLOW_ID",
+          "mode": "list",
+          "cachedResultName": "MCP_google_calendar"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "operation": "deleteEvent",
+            "startDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startDate', ``, 'string') }}",
+            "endDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endDate', ``, 'string') }}",
+            "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+            "timeZone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timeZone', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "operation",
+              "displayName": "operation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "startDate",
+              "displayName": "startDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "endDate",
+              "displayName": "endDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "eventId",
+              "displayName": "eventId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "timeZone",
+              "displayName": "timeZone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [-1420, 300],
+      "id": "30313393-739b-4d0a-9cb5-ad357a5bd07e",
+      "name": "delete_event"
+    },
+    {
+      "parameters": {
+        "name": "update_event",
+        "description": "Call this tool to update the event name, startDate or endDate. Validate with validate_busy_time before any action",
+        "workflowId": {
+          "__rl": true,
+          "value": "REMOVED_WORKFLOW_ID",
+          "mode": "list",
+          "cachedResultName": "MCP_google_calendar"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "operation": "updateEvent",
+            "startDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startDate', ``, 'string') }}",
+            "endDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endDate', ``, 'string') }}",
+            "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+            "timeZone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timeZone', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "operation",
+              "displayName": "operation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "startDate",
+              "displayName": "startDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "endDate",
+              "displayName": "endDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "eventId",
+              "displayName": "eventId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "timeZone",
+              "displayName": "timeZone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [-1560, 300],
+      "id": "2d2c13f1-a2ed-456b-b7a1-eb0548321543",
+      "name": "update_event"
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "REMOVED_EMAIL",
+          "mode": "list",
+          "cachedResultName": "REMOVED_EMAIL"
+        },
+        "timeMin": "={{ $json.startDate }}",
+        "timeMax": "={{ $json.endDate }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [320, -160],
+      "id": "88d38489-46e9-45e6-9a2f-2fd06ee936b8",
+      "name": "validate_availability_event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "REMOVED_CRED_ID",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "REMOVED_EMAIL",
+          "mode": "list",
+          "cachedResultName": "REMOVED_EMAIL"
+        },
+        "timeMin": "={{ $('map_data').item.json.startDate }}",
+        "timeMax": "={{ $('map_data').item.json.endDate }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [0, 280],
+      "id": "43e3b6cd-ac4e-4f5a-ae6e-426022a95556",
+      "name": "check_availability_to_create",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "REMOVED_CRED_ID",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4ee8a84d-c48a-416f-aa31-0633ee59124b",
+              "leftValue": "={{ $json.available }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [220, 280],
+      "id": "d6830751-86ad-43d1-8845-3f1d351d3324",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "errorMessage": "The time you are trying to create the event is busy"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [440, 380],
+      "id": "e9a3b749-fa26-4360-8ca4-3c701eed9f45",
+      "name": "Stop and Error"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "REMOVED_EMAIL",
+          "mode": "list",
+          "cachedResultName": "REMOVED_EMAIL"
+        },
+        "start": "={{ $('map_data').item.json.startDate }}",
+        "end": "={{ $('map_data').item.json.endDate }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [440, 220],
+      "id": "a5dd562d-604c-44be-a62e-81714cf35858",
+      "name": "create_event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "REMOVED_CRED_ID",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "REMOVED_EMAIL",
+          "mode": "list",
+          "cachedResultName": "REMOVED_EMAIL"
+        },
+        "eventId": "={{ $('map_data').item.json.eventId }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [320, 40],
+      "id": "f6532a23-562a-412b-a635-d497e358b33a",
+      "name": "delete_event1",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "REMOVED_CRED_ID",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "973dfb96-eeda-45be-bc93-668c9118677f",
+              "name": "available",
+              "value": "={{ $json.available }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [540, -160],
+      "id": "17b34942-1520-469c-a637-650eec10f49f",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "REMOVED_EMAIL",
+          "mode": "list",
+          "cachedResultName": "REMOVED_EMAIL"
+        },
+        "timeMin": "={{ $('map_data').item.json.startDate }}",
+        "timeMax": "={{ $('map_data').item.json.endDate }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [80, 760],
+      "id": "c3a5df5b-998e-41d6-9eab-1226ccac1c14",
+      "name": "get_event_in_time_gap",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "REMOVED_CRED_ID",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "REMOVED_EMAIL",
+          "mode": "list",
+          "cachedResultName": "REMOVED_EMAIL"
+        },
+        "eventId": "={{ $json.eventId }}",
+        "updateFields": {
+          "end": "={{ $json.endDate }}",
+          "start": "={{ $json.startDate }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [80, 540],
+      "id": "7c074b89-218a-4e0e-a250-668471b28675",
+      "name": "update_calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "REMOVED_CRED_ID",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "get_events_in_gap_time",
+        "description": "Use this tool to get event data in a gap of time. but if you have just validate the availibity of the time use \"validate_busy_time\" tool this is tool is to get data",
+        "workflowId": {
+          "__rl": true,
+          "value": "REMOVED_WORKFLOW_ID",
+          "mode": "list",
+          "cachedResultName": "MCP_google_calendar"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "operation": "getEventData",
+            "startDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startDate', ``, 'string') }}",
+            "endDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endDate', ``, 'string') }}",
+            "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+            "timeZone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timeZone', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "operation",
+              "displayName": "operation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "startDate",
+              "displayName": "startDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "endDate",
+              "displayName": "endDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "eventId",
+              "displayName": "eventId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "timeZone",
+              "displayName": "timeZone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [-1260, 300],
+      "id": "541fe97e-6fee-44c6-be1b-046c04e55e43",
+      "name": "get_events_in_gap_time"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"operation\": \"{{ $json.operation }}\",\n  \"startDate\": \"{{ DateTime.fromISO($json.startDate).setZone($json.timeZone).toISO() }}\",\n  \"endDate\": \"{{ DateTime.fromISO($json.endDate).setZone($json.timeZone).toISO() }}\",\n  \"eventId\": \"{{ $json.eventId }}\",\n  \"timeZone\": \"{{ $json.timeZone }}\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-500, 280],
+      "id": "27ae1a8c-d83a-417e-aa2e-0768b440dbba",
+      "name": "map_data"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"isAvailableTime\":{{$json.values().length === 0}},\n\"eventData\":{\nid:\"{{ $json.id }}\"\n}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [300, 760],
+      "id": "ee250199-baa6-46e2-8823-552140920530",
+      "name": "response_data_get_data"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "operation": "getEventData",
+          "startDate": "2025-05-17T19:00:00Z",
+          "endDate": "2025-05-17T20:00:00Z",
+          "eventId": null,
+          "timeZone": "America/Argentina/Buenos_Aires"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "map_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Operation": {
+      "main": [
+        [
+          {
+            "node": "validate_availability_event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "delete_event1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "check_availability_to_create",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "update_calendar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "get_event_in_time_gap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_busy_time": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_new_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_availability_event": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_availability_to_create": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "create_event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_event_in_time_gap": {
+      "main": [
+        [
+          {
+            "node": "response_data_get_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_events_in_gap_time": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "map_data": {
+      "main": [
+        [
+          {
+            "node": "Operation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "REMOVED_VERSION_ID",
+  "meta": {
+    "instanceId": "REMOVED_INSTANCE_ID"
+  },
+  "id": "REMOVED_WORKFLOW_ID",
+  "tags": []
+}

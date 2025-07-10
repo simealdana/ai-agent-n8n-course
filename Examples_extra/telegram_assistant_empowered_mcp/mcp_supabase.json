@@ -1,0 +1,433 @@
+{
+  "name": "MCP_supabase_personal_brand",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "REMOVED_PATH_ID"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [-420, -120],
+      "id": "d7fb7506-0061-4fc6-89b0-26fa04ea4883",
+      "name": "MCP Server Trigger",
+      "webhookId": "REMOVED_WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to get elements from the database\n\n- Actions: Just avalible \"get_many\" and \"get_by_id\"\n- database: 'course_waitlist' (stores users waiting to enroll in a course),  \n  'downloadable_resources' (stores files and materials available for download),  \n  'downloads' (logs each download event with user and timestamp),  \n  'interested_users' (tracks users who have expressed interest in a product or course),  \n  'mentorship_requests' (records incoming requests for mentorship)\n- limit: number to get many\n- id: id of the element to get by id\n",
+        "workflowId": {
+          "__rl": true,
+          "value": "REMOVED_WORKFLOW_ID",
+          "mode": "list",
+          "cachedResultName": "MCP_supabase_personal_brand"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "limit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('limit', ``, 'number') }}",
+            "action": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('action', ``, 'string') }}",
+            "database": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('database', ``, 'string') }}",
+            "id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "action",
+              "displayName": "action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "database",
+              "displayName": "database",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "limit",
+              "displayName": "limit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [-260, 120],
+      "id": "a6ddaacf-3c67-4247-b612-5e3ca1a1ea60",
+      "name": "Call n8n Workflow Tool"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "action"
+            },
+            {
+              "name": "database"
+            },
+            {
+              "name": "limit",
+              "type": "number"
+            },
+            {
+              "name": "id"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [80, -60],
+      "id": "6b180254-0259-45bb-a01d-c7baab6fd625",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.database }}",
+                    "rightValue": "interested_users",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "a3a67e85-730c-48ed-9247-705d85d075b2"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "interested_users"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "902a1171-99c0-4b4d-bdec-0ba0faf9a819",
+                    "leftValue": "={{ $json.database }}",
+                    "rightValue": "mentorship_requests",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "mentorship_requests"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "aa2227d4-3a1d-4df4-a2e4-03c595d2bd76",
+                    "leftValue": "={{ $json.database }}",
+                    "rightValue": "downloadable_resources",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "downloadable_resources"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [80, -340],
+      "id": "30f05d0a-172d-44a0-b16a-94551bd298ef",
+      "name": "switch_database"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [740, -60],
+      "id": "6c8e2fce-b88d-402a-bf68-e7ff0c77dfee",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "get_many",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "306e3fab-90d5-4e27-af1c-d1cb81977106"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "get_many"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "bd249eca-7c03-4625-8cd7-5a44498dad34",
+                    "leftValue": "{{ $json.action }}",
+                    "rightValue": "create",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "create"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0b343c99-151e-4725-b84f-75b08d9751d4",
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "get_by_id",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "get_by_id"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [260, -60],
+      "id": "11b1671c-2e25-4b42-9f79-fd102f3ad830",
+      "name": "switch_action"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "={{ $json.database }}",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "=id",
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [520, 60],
+      "id": "96d34dad-67bd-4427-a471-47576147d5e2",
+      "name": "get_by_id",
+      "credentials": {
+        "supabaseApi": {
+          "id": "REMOVED_CRED_ID",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "={{ $json.database }}",
+        "matchType": "allFilters"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [520, -140],
+      "id": "e7b1d2d8-e7b7-4026-b6d4-41bf5156d82f",
+      "name": "get_many",
+      "credentials": {
+        "supabaseApi": {
+          "id": "REMOVED_CRED_ID",
+          "name": "Supabase account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "action": "get_by_id",
+          "database": "downloadable_resources",
+          "limit": 20,
+          "id": "lead-qualification-agent"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Call n8n Workflow Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "switch_action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "switch_database": {
+      "main": [[]]
+    },
+    "switch_action": {
+      "main": [
+        [
+          {
+            "node": "get_many",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [
+          {
+            "node": "get_by_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_by_id": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_many": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "REMOVED_VERSION_ID",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "REMOVED_INSTANCE_ID"
+  },
+  "id": "REMOVED_WORKFLOW_ID",
+  "tags": []
+}
