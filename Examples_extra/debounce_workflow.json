@@ -1,0 +1,903 @@
+{
+  "name": "debounce_workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "2f9854ac-26b3-446c-9d0d-ae25157c61bb",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $json.input }}",
+                    "rightValue": "="
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5ee44415-c358-449f-b672-afe3e9092e95",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        1328,
+        -48
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"sessionId\": \"{{ $json.message.chat.id }}\",\n  \"debounce\": {\n    \"keyPrefix\": \"telegram-chat-bot\",\n    \"windowSeconds\": 15,\n    \"timezone\": \"America/New_York\"\n  },\n  \"provider\": {\n    \"name\": \"telegram\",\n    \"channel\": \"telegram_chat\"\n  },\n  \"conversation\": {\n    \"id\": \"{{ $json.message.chat.id }}\"\n  },\n  \"sender\": {\n    \"id\": \"{{ $json.message.chat.id }}\",\n    \"name\": \"{{ $json.message.chat.first_name }}\"\n  },\n  \"message\": {\n    \"id\": \"{{ $json.message.message_id }}\",\n    \"type\": \"{{ $json.message.text ? 'text' : 'image' }}\",\n    \"text\": \"{{ $json.message.text }}\",\n    \"media\": null\n  },\n  \"timestamps\": {\n    \"receivedAt\": \"{{ $json.message.date }}\"\n  },\n  \"env\": \"dev\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1680,
+        192
+      ],
+      "id": "6b244b78-63f6-4c28-8535-75dcaf0b8732",
+      "name": "Normalize Input"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "date_time"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        688,
+        -48
+      ],
+      "id": "b83503bd-9b10-456c-8b65-10501d28328c",
+      "name": "Sort1"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "message"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        912,
+        -48
+      ],
+      "id": "1a28b8e1-0f77-46bc-be42-70ff992ad4f9",
+      "name": "Aggregate1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "message",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -48
+      ],
+      "id": "dc587b99-f350-48c8-a807-9f8f56386019",
+      "name": "splitOut1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "message",
+        "key": "={{ $('debounce_data').item.json.debounceKey }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        192
+      ],
+      "id": "2e92792a-639b-4b9f-8433-9f04939d6afc",
+      "name": "getData1",
+      "credentials": {
+        "redis": {
+          "id": "Wlz9uHXtjRDTWiEd",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.debounce?.windowSeconds || 15 }}"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -176,
+        352
+      ],
+      "id": "73f7dbf8-a6c0-4536-b735-f7fa2363b373",
+      "name": "Wait1",
+      "webhookId": "26c6c5da-7df3-4796-9186-ac0c20f7ae24"
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $json.debounceKey }}",
+        "messageData": "={{$json.debounceValue}}",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -832,
+        192
+      ],
+      "id": "36b8589e-2679-4776-8925-060e17560a08",
+      "name": "push_data",
+      "credentials": {
+        "redis": {
+          "id": "Wlz9uHXtjRDTWiEd",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c031771a-b94c-446f-b6b1-4dc1cdea31ef",
+                    "leftValue": "={{ $json.message.last().parseJson().date }}",
+                    "rightValue": "={{ $now.minus($json.debounce?.windowSeconds || 15,'seconds') }}",
+                    "operator": {
+                      "type": "dateTime",
+                      "operation": "before"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Take"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ JSON.parse($json.message?.last().parseJson().id.toNumber() || '{}') }}",
+                    "rightValue": "={{ $('Normalize Input').item.json.message.id.toNumber() }}",
+                    "operator": {
+                      "type": "number",
+                      "operation": "notEquals"
+                    },
+                    "id": "6ff0ed94-bc18-4e06-8e87-9f7013c50d89"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Nothing"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "72b23ef1-861f-4660-87e0-f5fceed26bc5",
+                    "leftValue": "={{ JSON.parse($json.message.last()).id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notExists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "FirstTime"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Controller",
+          "allMatchingOutputs": true
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -368,
+        144
+      ],
+      "id": "33f8b3ec-d03e-4205-8b9e-1a1def56197c",
+      "name": "message_condition"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        160
+      ],
+      "id": "5dbdce39-1caf-49b4-bae2-8e5e8062919c",
+      "name": "no_operation"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$json.input}}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1776,
+        -64
+      ],
+      "id": "c5df0620-1d20-4624-994f-cb99f379abeb",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        192
+      ],
+      "id": "e4283275-f186-4390-84e7-9b54a38611be",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "4IMKAI10rXpoMvJT",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -2112,
+        80
+      ],
+      "id": "c819808a-9af3-45cf-adf7-d8b20f8e921c",
+      "name": "Telegram Trigger",
+      "webhookId": "eb9e1d3a-02b0-4906-b0de-45961feeff5b",
+      "credentials": {
+        "telegramApi": {
+          "id": "TVvLdDsmTGy0bNqh",
+          "name": "chat_self_hosted_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6149ca32-2e74-4399-9e4c-af4ee4423d5c",
+              "name": "debounceKey",
+              "value": "={{\n  `${$json.debounce.keyPrefix}:` +\n  `${$json.provider.name}:` +\n  `${$json.provider.channel}:` +\n  `${$json.env}:` + \n  `${$json.conversation.id}`\n}}",
+              "type": "string"
+            },
+            {
+              "id": "b745637f-d9c4-4d7d-b6c6-3612c58b20a5",
+              "name": "debounceValue",
+              "value": "={{ $json.message.toJsonString() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1056,
+        192
+      ],
+      "id": "5c9f17e1-c3e8-4d71-9c7c-f784b3cbc6a0",
+      "name": "debounce_data"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "={{ $('debounce_data').item.json.debounceKey }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        -32
+      ],
+      "id": "faa4e3c1-2b1b-468e-af21-5bbe7295f7d8",
+      "name": "delete_key",
+      "credentials": {
+        "redis": {
+          "id": "Wlz9uHXtjRDTWiEd",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"sessionId\": \"{{ $('Normalize Input').item.json.sessionId }}\",\n  \"debounce\": {\n    \"keyPrefix\": \"telegram-chat-bot\",\n    \"windowSeconds\": 15,\n    \"timezone\": \"America/New_York\"\n  },\n  \"provider\": {\n    \"name\": \"telegram\",\n    \"channel\": \"telegram_chat\"\n  },\n  \"conversation\": {\n    \"id\": \"{{ $('Normalize Input').item.json.message.chat.id }}\"\n  },\n  \"sender\": {\n    \"id\": \"{{ $('Normalize Input').item.json.sender.id}}\",\n    \"name\": \"{{ $('Normalize Input').item.json.sender.name }}\"\n  },\n  \"message\": {\n    \"id\": \"{{ $('Normalize Input').item.json.message.id }}\",\n    \"type\": \"{{ $('Normalize Input').item.json.message.text ? 'text' : 'image' }}\",\n    \"text\": \"{{ $('Normalize Input').item.json.message.text }}\",\n    \"media\": null,\n    \"date\": \"{{ $json.currentDate }}\"\n  },\n  \"timestamps\": {\n    \"receivedAt\": \"{{ $('Normalize Input').item.json.timestamps.receivedAt }}\"\n  },\n  \"env\": \"dev\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1264,
+        192
+      ],
+      "id": "5816003b-1840-4b43-b35f-5fe0ea6f3782",
+      "name": "map_data"
+    },
+    {
+      "parameters": {
+        "options": {
+          "timezone": "={{ $json.debounce?.timezone || 'America/New_York' }}"
+        }
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -1472,
+        192
+      ],
+      "id": "4031cd8e-14b2-4dd7-8c53-fbfe7213c2d1",
+      "name": "set_current_date"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ JSON.parse($json.message) }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        -48
+      ],
+      "id": "1c0d1979-210f-4970-8813-2cbb76500087",
+      "name": "parse_json"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f1ca6350-539e-406f-a8f5-1deb03699fa6",
+              "name": "message",
+              "value": "={{ $('parse_json').item.json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "35eb54b0-c663-402f-94bf-d4be534135fe",
+              "name": "date_time",
+              "value": "={{ $('parse_json').item.json.date }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        512,
+        -48
+      ],
+      "id": "55184f18-402e-4b8d-836f-716246511b0d",
+      "name": "set_message"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9993340a-3d13-4c9a-903b-bf7e3103cbdf",
+              "name": "input",
+              "value": "={{ $json.message.join(' ')}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        -48
+      ],
+      "id": "4f65b2fe-b539-4861-928b-7ad31c49d54c",
+      "name": "join_messages"
+    },
+    {
+      "parameters": {
+        "chatId": "5850415017",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2160,
+        -64
+      ],
+      "id": "df48b11f-c0e3-428e-afd9-0c65cb849ba1",
+      "name": "Send a text message",
+      "webhookId": "8e0a75ea-d6a2-4252-a1b4-90da5d456645",
+      "credentials": {
+        "telegramApi": {
+          "id": "TVvLdDsmTGy0bNqh",
+          "name": "chat_self_hosted_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('map_data')}}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1904,
+        176
+      ],
+      "id": "5ce95785-8b93-42cf-9bd7-1a74ac8bf651",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c698e0f6-eec9-41b2-98a8-067ee62004f3",
+              "name": "input",
+              "value": "={{$json.input}}",
+              "type": "string"
+            },
+            {
+              "id": "f06d4926-9b73-484a-b18f-21fee516b1d5",
+              "name": "sessionId",
+              "value": "={{$('map_data').item.json.sessionId}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1536,
+        -48
+      ],
+      "id": "2c4bc2f4-02eb-434a-b314-f2e2f16d9042",
+      "name": "input_data"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.first().json.message\n\nconst sessionId = $('map_data').first().json.sessionId\n\nconst arr = items.map(item=>{\n  const raw = JSON.parse(item)\n  return raw\n})\n\narr.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));\n\nconst input = arr.map(i => i.text).join(' ');\n\nreturn [{ json: { input,sessionId } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        288
+      ],
+      "id": "eb4f4781-0dd2-439a-8f0b-a3d3d5b7f889",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "content": "## Geathering data \nIn this part of the automation, we will standardize the data to convert it into a common input-agnostic model (Telegram, WhatsApp, webhook, etc.)\n\n\n\n\n\n\n\n",
+        "height": 320,
+        "width": 848
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1744,
+        64
+      ],
+      "id": "486bd95a-efd9-40c4-a91f-dbf4107d853c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Debounce redis \nIn this part of the automation we will implement debounce to handle multiple messages in a period of time.",
+        "height": 688,
+        "width": 880,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -848,
+        -80
+      ],
+      "id": "34028174-0593-4768-be9c-a8017d057229",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Mapping, analyzing, and classifying data for delivery to the AI agent",
+        "height": 288,
+        "width": 1600,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        64,
+        -128
+      ],
+      "id": "71206814-e88f-403d-bfab-14f27cbcd902",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## All data manipulation in only one node\n",
+        "height": 208,
+        "width": 464
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        624,
+        224
+      ],
+      "id": "3c780f5d-3713-47f6-87f0-9f3e6a64d4e7",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Sort1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "join_messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "splitOut1": {
+      "main": [
+        [
+          {
+            "node": "parse_json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getData1": {
+      "main": [
+        [
+          {
+            "node": "message_condition",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "getData1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "push_data": {
+      "main": [
+        [
+          {
+            "node": "getData1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "message_condition": {
+      "main": [
+        [
+          {
+            "node": "delete_key",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "no_operation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "no_operation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "set_current_date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "input_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "debounce_data": {
+      "main": [
+        [
+          {
+            "node": "push_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete_key": {
+      "main": [
+        [
+          {
+            "node": "splitOut1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "map_data": {
+      "main": [
+        [
+          {
+            "node": "debounce_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set_current_date": {
+      "main": [
+        [
+          {
+            "node": "map_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parse_json": {
+      "main": [
+        [
+          {
+            "node": "set_message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set_message": {
+      "main": [
+        [
+          {
+            "node": "Sort1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "join_messages": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "input_data": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "62e93be6-ccbc-4d4f-bd58-4440c6324c88",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a8735d1bf3aac94e1ec364ebbd3f68cf6db664b7849b71a5ffb4e0161303b087"
+  },
+  "id": "3A1B76K2ee03vAsK",
+  "tags": []
+}
